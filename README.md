@@ -1,2 +1,2 @@
-# parking-system
+# Parking Slot Management System
  PARKING SYSTEM
