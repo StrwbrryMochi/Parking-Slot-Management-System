@@ -1,0 +1,28 @@
+/* Custom Navbar Styling */
+.navbar-custom .card {
+    border-radius: 13px;
+    border: 0.8px solid #CDC5EB;
+    background: #FFF;
+    width: 200px;
+    height: 115.935px;
+}
+
+.card .statistics {
+    margin-top: 10px;
+}
+.card h5, .card p {
+    text-align: center;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.card h5 {
+    font-size: 22px;
+    color: #6C6971;
+}
+
+.card p {
+    font-size: 28px;
+    color: #000;
+}

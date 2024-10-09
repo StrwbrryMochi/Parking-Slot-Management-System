@@ -1,0 +1,35 @@
+.sidebar-left {
+    width: auto;
+    height: 750px;
+    border-radius: 13px;
+    border: 1px solid #CDC5EB;
+    background: #FFF;
+}
+
+.nav {
+    padding: 15px 35px 14px 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav h4 {
+    color: #757575;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.list-group a {
+    color: var(--Gray-700, #616161);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: 0.024px;
+}
+
+svg {
+    fill: #757575;
+}
