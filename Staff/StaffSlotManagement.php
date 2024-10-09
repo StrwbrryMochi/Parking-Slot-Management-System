@@ -9,7 +9,7 @@ include '../php/connections.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCP Parking System</title>
+    <title>Slot Management</title>
     <link rel="icon" href="../img/logo.png">
     <!-- Libraries -->
     <link rel="stylesheet" href="../lib/css/bootstrap.min.css" />
