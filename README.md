@@ -1,6 +1,6 @@
 
-<h1 align="center">Hi 👋, I'm Mochi</h1>
-<h3 align="left">Connect with me:</h3>
+<h1 align="center">🚗 Parking Slot Management System</h1>
+<h3 align="left"> a streamlined solution designed to optimize the organization and monitoring of parking spaces across various floors and zones. It offers real-time tracking of slot availability, guest details, and vehicle information, ensuring a smooth and efficient parking experience. Key features include time tracking, automatic fee calculation based on user type, and easy-to-use editing tools for guest details, while crucial slot data such as slot number, floor, and status remain unchangeable to maintain accuracy. With a user-friendly interface and features like multi-floor pagination and modals for editing, the system simplifies parking management and enhances overall efficiency.</h3>
 <p align="left">
 </p>
 
