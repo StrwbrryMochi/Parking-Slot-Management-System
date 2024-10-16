@@ -1372,10 +1372,15 @@ footer {
   padding: 0 5px;
 }
 
-.plate-number input:focus + label {
+.plate-number input:focus + label,
+.plate-number input:not(:placeholder-shown) + label {
   top: 0;
   left: 10px;
   color: #53539c;
+}
+
+.plate-number input::placeholder {
+  opacity: 0;
 }
 
 .plate-number input:focus {
@@ -1404,7 +1409,7 @@ footer {
 .vehicle-type-header,
 .user-type-header {
   font-size: 1.2rem;
-  font-weight: 600;
+  font-weight: 800;
 }
 
 .modal-footer.add {
@@ -1432,7 +1437,8 @@ footer {
   align-items: center;
   background-color: #53539c;
   font-size: 1.5rem;
-  transition: background-color 0.6s ease, width 0.3s ease, height 0.3s ease;
+  transition: background-color 0.6s ease, width 0.3s ease, height 0.3s ease,
+    color 0.6s ease;
 }
 
 .addButton-container {
@@ -1469,6 +1475,7 @@ footer {
 
 .modal-footer.add button:hover {
   background-color: #4a465d;
+  color: #838090;
   width: 95px;
   height: 95px;
 }
@@ -1497,4 +1504,182 @@ footer {
   width: 20px;
   background-color: #838090;
   box-shadow: -1px -10px 0 #f5f5f5;
+}
+
+/* Edit Slot  */
+.modal-dialog.edit {
+  max-width: 30%;
+}
+
+.modal-content.edit {
+  height: 94.35vh;
+  padding: 0;
+  user-select: none;
+  overflow: hidden;
+}
+
+.edit-background {
+  width: 100%;
+  height: 250px;
+}
+
+.edit-background img {
+  width: 100%;
+  height: 100%;
+}
+
+.edit-slot-data {
+  display: flex;
+  gap: 2px;
+}
+
+.edit-slot-data input {
+  border: none;
+  width: 12px;
+  background-color: transparent;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #53539c;
+  pointer-events: none;
+}
+
+#display-zone-edit {
+  width: 15px;
+}
+
+.slot-data-header,
+.slot-status-header,
+.edit-vehicle-header,
+.edit-user-header {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 5px;
+}
+
+.edit-slot-container,
+.slot-status,
+.edit-vehicle-container,
+.edit-user-container {
+  margin-bottom: 10px;
+}
+
+.edit-slot-data p,
+.slot-status p {
+  font-size: 1.2rem;
+  color: #53539c;
+  font-weight: 600;
+}
+
+.modal-footer.edit {
+  display: block;
+  left: 0px;
+  bottom: -66px;
+  margin-top: 20px;
+  height: 220px;
+  width: 600px;
+  position: relative;
+  background-color: #838090;
+}
+
+.modal-footer.edit button {
+  position: absolute;
+  left: 50%;
+  top: 50px;
+  transform: translate(-50%, -50%);
+  border: none;
+  width: 90px;
+  height: 90px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #53539c;
+  font-size: 1.5rem;
+  transition: background-color 0.6s ease, width 0.3s ease, height 0.3s ease,
+    color 0.6s ease;
+}
+
+.editButton-container {
+  position: absolute;
+  left: 47%;
+  top: 0px;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5;
+  font-size: 1.5rem;
+  z-index: 20;
+}
+
+.modal-footer.edit button:focus {
+  outline: none;
+  border-color: #f5f5f5;
+  box-shadow: none;
+}
+
+.modal-footer.edit button:focus-visible {
+  outline: none;
+  border-color: #f5f5f5;
+  box-shadow: none;
+}
+
+.modal-footer.edit button:active {
+  background-color: #4a465d;
+}
+
+.modal-footer.edit button:hover {
+  background-color: #4a465d;
+  color: #838090;
+  width: 95px;
+  height: 95px;
+}
+
+.modal-footer.edit::before {
+  content: "";
+  display: block;
+  position: relative;
+  left: 216px;
+  border-radius: 0 10px 0 0;
+  top: 0px;
+  height: 20px;
+  width: 20px;
+  background-color: #838090;
+  box-shadow: 1px -10px 0 #f5f5f5;
+}
+
+.modal-footer.edit::after {
+  content: "";
+  display: block;
+  position: relative;
+  right: -336px;
+  border-radius: 10px 0 0 0;
+  top: -20px;
+  height: 20px;
+  width: 20px;
+  background-color: #838090;
+  box-shadow: -1px -10px 0 #f5f5f5;
+}
+
+/* Checkout Modal */
+.checkout-slot-data {
+  display: flex;
+  gap: 2px;
+}
+
+.checkout-slot-data input {
+  border: none;
+  width: 20px;
+  background-color: transparent;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #53539c;
+  pointer-events: none;
+}
+
+#display-zone-checkout {
+  width: 15px;
 }
