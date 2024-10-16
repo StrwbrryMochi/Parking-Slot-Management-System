@@ -71,6 +71,7 @@ include '../php/connections.php';
 
 <?php include '../components/viewSlotModal.php'; ?>
 <?php include '../components/editSlotModal.php'; ?>
+<?php include '../components/checkoutModal.php'; ?>
 
 <?php 
 $current_page = 'StaffSlotOverview'; 
@@ -132,6 +133,8 @@ include '../components/addSlotModal.php';
                         document.getElementById('modal-user-type').textContent = `${userType}`;
                         document.getElementById('modal-vehicle-type').textContent = `${vehicleType}`;
                         document.getElementById('modal-status').textContent = `${status}`;
+
+                        document.getElementById('hidden-time-in').value = timeIn;
 
                         // Handle time_in: if it's 'null', empty, or invalid, hide the field
                         const modalTimeIn = document.getElementById('modal-time-in');
@@ -197,7 +200,7 @@ include '../components/addSlotModal.php';
      <script>
         // Read the page url if it has said params to disable loader
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('add_slot')) {
+        if (urlParams.has('add_slot') || urlParams.has('edit_slot')) {
             
             document.getElementById('loader-container').style.display = 'none';
         }
