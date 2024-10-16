@@ -71,6 +71,11 @@ include '../php/parkingFunction.php';
 
 <!-- Include the right sidebar -->
 <?php include '../components/sidebarRight.php'; ?>
+
+<?php include '../components/viewSlotModal.php'; ?>
+<?php include '../components/editSlotModal.php'; ?>
+<?php include '../components/checkoutModal.php'; ?>
+
 <?php 
 $current_page = 'StaffSlotManagement'; 
 include '../components/addSlotModal.php'; 
@@ -88,7 +93,7 @@ include '../components/addSlotModal.php';
      <script>
         // Add Slot 
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('add_slot')) {
+        if (urlParams.has('add_slot') || urlParams.has('edit_slot')) {
             
             document.getElementById('loader-container').style.display = 'none';
         }
