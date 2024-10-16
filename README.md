@@ -1,2 +1,8 @@
-# Parking Slot Management System
- PARKING SYSTEM
+
+<h1 align="center">🚗 Parking Slot Management System</h1>
+<h3 align="left"> a streamlined solution designed to optimize the organization and monitoring of parking spaces across various floors and zones. It offers real-time tracking of slot availability, guest details, and vehicle information, ensuring a smooth and efficient parking experience. Key features include time tracking, automatic fee calculation based on user type, and easy-to-use editing tools for guest details, while crucial slot data such as slot number, floor, and status remain unchangeable to maintain accuracy. With a user-friendly interface and features like multi-floor pagination and modals for editing, the system simplifies parking management and enhances overall efficiency.</h3>
+<p align="left">
+</p>
+
+<h3 align="left">Languages and Tools:</h3>
+<p align="left"> <a href="https://www.w3schools.com/css/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="40" height="40"/> </a> <a href="https://www.w3.org/html/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="40" height="40"/> </a> <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/> </a> <a href="https://www.mysql.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="mysql" width="40" height="40"/> </a> <a href="https://www.php.net" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/php/php-original.svg" alt="php" width="40" height="40"/> </a> </p>
