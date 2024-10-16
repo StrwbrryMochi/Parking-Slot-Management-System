@@ -178,12 +178,12 @@
                         </div>
                     </div>
                     <div class="plate-number">
-                    <input type="text" id="plateNumber" class="plate-input" name="plate_number" autocomplete="off" oninput="convertToUppercase()" required>
+                    <input type="text" id="plateNumber" class="plate-input" name="plate_number" autocomplete="off" oninput="convertToUppercase()" placeholder=" " required>
                     <label for="plateNumber">Enter Plate Number</label>
                     </div>
             <div class="modal-footer add">
                 <div class="addButton-container">
-                <button type="submit" class="btn btn-primary" id="AddButton" name="addParking"><i class="fa-solid fa-plus"></i></button>
+                <button type="submit" class="btn btn-primary" id="AddButton" name="addSlot"><i class="fa-solid fa-plus"></i></button>
                 </div>
             </div>
             </form>
@@ -192,15 +192,6 @@
 </d>
 
 <script>
-    // Get the modal element
-    var modalId = document.getElementById('addSlotModal');
-
-    modalId.addEventListener('show.bs.modal', function (event) {
-        
-        let button = event.relatedTarget;
-        let recipient = button ? button.getAttribute('data-bs-whatever') : null;
-    });
-
     // FSEX KEYDOWN MF
     document.addEventListener('keydown', function(event) {
         if (event.key === 'F6') {
@@ -213,12 +204,10 @@
 </script>
 
 <script>
-    const occupiedSlots = <?php echo json_encode($occupiedSlots); ?>;
-
     function convertToUppercase() {
-    var inputField = document.getElementById('plateNumber');
-    inputField.value = inputField.value.toUpperCase();
-}
+        var inputField = document.getElementById('plateNumber');
+        inputField.value = inputField.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    }
 </script>
 
 <script>
@@ -227,6 +216,8 @@
 </script>
 
 <script>
+    const occupiedSlots = <?php echo json_encode($occupiedSlots); ?>;
+
     let selectedFloor = null;
     let selectedZone = null;
 
@@ -248,7 +239,7 @@
 
     // Function to update occupied slot appearance
     function updateOccupiedSlots() {
-    if (!selectedFloor || !selectedZone) return; // Make sure both floor and zone are selected
+    if (!selectedFloor || !selectedZone) return; 
 
     // Reset all slots first (remove the occupied class and keep checked slots if available)
     document.querySelectorAll('.slot-group input').forEach(slotInput => {
