@@ -120,12 +120,37 @@
   document.getElementById("edit-plate-number").value = licensePlate;
   document.getElementById("display-status").innerText = Status;
 
-  const vehicleTypeRadio = document.getElementsByName("vehicle_type");
-    vehicleTypeRadio.forEach(radio => {
-      if (radio.value === vehicleType) {
-        radio.checked = true;
-      }
-    });
+// Function to manage vehicle type selection
+function manageVehicleTypeSelection() {
+  const carInput = document.getElementById("CarInputId");
+    const motorcycleInput = document.getElementById("MotorcycleInputId");
+    const bikeInput = document.getElementById("BikeInputId");
+
+    // Reset all vehicle type inputs to enabled
+    carInput.removeAttribute('disabled');
+    motorcycleInput.removeAttribute('disabled');
+    bikeInput.removeAttribute('disabled');
+
+    // Disable inputs based on the detected vehicle type
+    if (vehicleType === "Car") {
+        motorcycleInput.setAttribute('disabled', 'disabled');
+        bikeInput.setAttribute('disabled', 'disabled');
+        carInput.checked = true; 
+    } else if (vehicleType === "Motorcycle") {
+        carInput.setAttribute('disabled', 'disabled'); 
+        bikeInput.setAttribute('disabled', 'disabled');
+        motorcycleInput.checked = true; 
+    } else if (vehicleType === "Bicycle") {
+        carInput.setAttribute('disabled', 'disabled'); 
+        motorcycleInput.setAttribute('disabled', 'disabled');
+        bikeInput.checked = true; 
+    }
+}
+
+// Call the function to initialize the input states based on the current vehicle type
+manageVehicleTypeSelection();
+
+  
 
   const userTypeRadio = document.getElementsByName("user_type");
     userTypeRadio.forEach(radio => {
@@ -146,6 +171,7 @@
     const userType = document.getElementById("modal-user-type").innerText;
     const vehicleType = document.getElementById("modal-vehicle-type").innerText;
     const timeIn = document.getElementById("hidden-time-in").value;
+    const status = document.getElementById("modal-status").innerText;
 
     // Create a Date object from the timeIn value
     const EntryDate = new Date(timeIn);
@@ -181,6 +207,8 @@
     document.getElementById("hidden-license-plate-checkout").value = licensePlate;
     document.getElementById("hidden-user-type").value = userType;
     document.getElementById("hidden-vehicle-type").value = vehicleType;
+    document.getElementById("hidden-status").value = status;
+    document.getElementById("form-time-in").value = timeIn;
 
     // Display Corresponding Data as Text
     document.getElementById("checkout-license-plate").innerText = licensePlate;
@@ -237,11 +265,14 @@
         console.log("Duration Minutes: ", durationMins);
         console.log("Duration Seconds: ", durationSecs);
 
-        // Ensure a minimum of 1 hour is charged
-        const chargeableDurationHrs = Math.max(1, Math.ceil(durationHrs + (durationMins > 0 ? 1 : 0)));
-
         // Calculate total hours considering the days
-        const totalHours = (durationDays * 24) + durationHrs;
+        let totalHours = (durationDays * 24) + durationHrs;
+
+        // Ensure a minutes and seconds are considered an Hour
+        if (durationMins > 0 || durationSecs > 0) {totalHours += 1;}
+
+        // Ensure a minimum of 1 hour is charged
+        const chargeableDurationHrs = Math.max(1, totalHours);
 
         // Format the actual Duration as 'HH:mm:ss'
         const formattedDuration = String(totalHours).padStart(2, '0') + ':' +
@@ -286,7 +317,14 @@
 
         // Display the Human-readable Duration text in the checkout-duration element
         document.getElementById("checkout-duration").innerText = formattedDurationText;
+
+        const feeRates = { Bicycle:2, Motorcycle: 5, Car: 10};
+
+        const feePerHour = feeRates[vehicleType] || 0;
+        const totalFee = chargeableDurationHrs * feePerHour;
+        console.log('Total Fee: ', totalFee.toFixed(2));
+        document.getElementById("checkout-fee").innerText = totalFee
+        document.getElementById("hidden-fee").value = totalFee
     }
 });
-
 </script>
