@@ -14,10 +14,6 @@
             <span class="corner-text">F6</span>
             <span class="center-text">ADD</span>
             </button>
-            <button class="action-button">
-            <span class="corner-text">F10</span>
-            <span class="center-text">CONCERN</span>
-            </button>
         </div>
     </div>
 </div>
