@@ -18,6 +18,7 @@ include '../php/connections.php';
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
     <script src="../lib/js/jquery-3.7.1.min.js"></script>
     <script src="../lib/js/bootstrap.bundle.js"></script>
+    <script src="../lib/js/JsBarcode.all.min.js"></script>
     <script src="../lib/js/sweetalert.js"></script>
     <script src="../lib/js/toastr.js"></script>
     <!-- Styling -->
@@ -200,7 +201,7 @@ include '../components/addSlotModal.php';
      <script>
         // Read the page url if it has said params to disable loader
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('add_slot') || urlParams.has('edit_slot')) {
+        if (urlParams.has('add_slot') || urlParams.has('edit_slot') || urlParams.has('checkout_slot')) {
             
             document.getElementById('loader-container').style.display = 'none';
         }
