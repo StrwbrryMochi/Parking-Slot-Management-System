@@ -1,5 +1,6 @@
 <?php 
 
+// Add
 if (isset($_GET['add_slot']) && $_GET['add_slot'] == 'true') {
     echo "<script>
         toastr.success(' ', 'Slot Added');
@@ -24,6 +25,7 @@ if (isset($_GET['add_slot']) && $_GET['add_slot'] == 'true') {
     </script>";
 }
 
+// Edit
 if (isset($_GET['edit_slot']) && $_GET['edit_slot'] == 'true') {
     echo "<script>
         toastr.success(' ', 'Slot Edited');
@@ -45,5 +47,16 @@ if (isset($_GET['edit_slot']) && $_GET['edit_slot'] == 'true') {
             showMethod: 'fadeIn',
             hideMethod: 'fadeOut'
         };
+    </script>";
+}
+
+// Checkout
+if (isset($_GET['checkout_slot']) && $_GET['checkout_slot'] == 'true') {
+    echo "<script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Slot Successfully Processed!',
+        });
     </script>";
 }
