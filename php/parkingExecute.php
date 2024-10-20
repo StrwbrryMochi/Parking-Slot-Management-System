@@ -3,6 +3,7 @@
     include 'connections.php';
     include 'parkingFunction.php';
 
+    // POST METHOD
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // For Adding Slot
         if (isset($_POST['addSlot'])) {
@@ -67,3 +68,45 @@
             }
         }
     }
+
+// GET METHOD
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+
+    $search = isset($_GET['search']) ? $_GET['search'] : '';
+    $selectedFloors = isset($_GET['floors']) ? $_GET['floors'] : [];
+    $selectedZones = isset($_GET['zones']) ? $_GET['zones'] : [];
+    $selectedVehicleTypes = isset($_GET['vehicle_types']) ? $_GET['vehicle_types'] : [];
+
+    // Filter for occupied slots by plate number
+    $occupiedSlots = searchSlot($search, $selectedFloors, $selectedZones, $selectedVehicleTypes);
+
+    if (empty($occupiedSlots)) {
+        echo "<tr><td colspan='6'>No parking data available for this plate number.</td></tr>";
+    } else {
+        foreach ($occupiedSlots as $parkingData) { ?>
+            <tr>
+                <td><?php echo htmlspecialchars($parkingData['floor']); ?></td>
+                <td><?php echo htmlspecialchars($parkingData['zone']); ?></td>
+                <td><?php echo htmlspecialchars($parkingData['slot_number']); ?></td>
+                <td><?php echo htmlspecialchars($parkingData['plate_number']); ?></td>
+                <td><?php echo htmlspecialchars($parkingData['vehicle_type']); ?></td>
+                <td>
+                    <button
+                        class="view-btn"
+                        data-slot-id="<?php echo htmlspecialchars($parkingData['slot_id']); ?>" 
+                        data-floor="<?php echo htmlspecialchars($parkingData['floor']); ?>" 
+                        data-zone="<?php echo htmlspecialchars($parkingData['zone']); ?>" 
+                        data-slot-number="<?php echo htmlspecialchars($parkingData['slot_number']); ?>" 
+                        data-plate-number="<?php echo htmlspecialchars($parkingData['plate_number']); ?>"
+                        data-user-type="<?php echo htmlspecialchars($parkingData['user_type']); ?>" 
+                        data-vehicle-type="<?php echo htmlspecialchars($parkingData['vehicle_type']); ?>"
+                        data-status="<?php echo htmlspecialchars($parkingData['status']); ?>"
+                        data-time-in="<?php echo htmlspecialchars($parkingData['time_in']); ?>"
+                        data-toggle="modal"
+                        data-target="#slotModal">View</button>
+                </td>
+            </tr>
+        <?php 
+        }
+    }
+}

@@ -298,3 +298,48 @@ function slotCheckout($floor, $zone, $slot_number, $plateNumber, $vehicleType, $
 
     $connections->close();
 }
+
+function searchSlot($search = '', $selectedFloors = [], $selectedZones = [], $selectedVehicleTypes = []) {
+    global $connections;
+
+    $search = mysqli_real_escape_string($connections, $search);
+
+    $filterSql = "SELECT * FROM parking_tbl
+                  WHERE status = 'Occupied' AND plate_number LIKE '%$search%'";
+
+    if (!empty($selectedFloors)) {
+        $floors = implode(",", array_map('intval', $selectedFloors)); 
+        $filterSql .= " AND floor IN ($floors)";
+    }
+
+    if (!empty($selectedZones)) {
+        $escapedZones = array_map(function($zone) use ($connections) {
+            return  mysqli_real_escape_string($connections, $zone);
+        }, $selectedZones);
+        $zones = implode("','", $escapedZones);
+        $filterSql .= " AND zone IN ('$zones')";
+    }
+
+    if (!empty($selectedVehicleTypes)) {
+        $escapedVehicleTypes = array_map(function($vehicleType) use ($connections) {
+            return mysqli_real_escape_string($connections, $vehicleType);
+        }, $selectedVehicleTypes);
+        $vehicleTypes = implode("','", $escapedVehicleTypes);
+        $filterSql .= " AND vehicle_type IN ('$vehicleTypes')";
+    }
+
+     // Execute the query
+     $result = mysqli_query($connections, $filterSql);
+
+     $occupiedSlots = [];
+ 
+     // Fetch the results and populate the array
+     if ($result && mysqli_num_rows($result) > 0) {
+         while ($row = mysqli_fetch_assoc($result)) {
+             $occupiedSlots[] = $row;
+         }
+     }
+ 
+     return $occupiedSlots;
+ }
+ 
