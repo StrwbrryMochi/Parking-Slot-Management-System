@@ -56,7 +56,7 @@ if (isset($_GET['checkout_slot']) && $_GET['checkout_slot'] == 'true') {
         Swal.fire({
             icon: 'success',
             title: 'Success',
-            text: 'Slot Successfully Processed!',
+            text: 'Checkout Complete!',
         });
     </script>";
 }
