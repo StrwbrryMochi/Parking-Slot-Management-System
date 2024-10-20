@@ -1,5 +1,6 @@
 <?php 
 include '../php/connections.php';
+include_once '../php/parkingFunction.php';
 $current_page = 'StaffSlotManagement'; 
 ?>
 
@@ -59,7 +60,6 @@ $current_page = 'StaffSlotManagement';
     <?php include '../components/cards.php'; ?>
     <div class="parking-container">
         <?php
-        include '../php/parkingFunction.php';
         $fetchParking = fetchParking();
         ?>
         <div class="table-container">
