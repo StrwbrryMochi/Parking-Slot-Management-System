@@ -17,6 +17,7 @@
                     <div class="edit-slot-container">
                     <div class="slot-data-header">Slot Location</div>
                     <div class="edit-slot-data">
+                    <input type="hidden" name="current_page" value="<?php echo htmlspecialchars($current_page); ?>">
                     <input type="text" id="display-floor-edit" name="floor" readonly>
                     <input type="text" id="display-zone-edit" name="zone" readonly>
                     <input type="text" id="display-slot-edit" name="slot_number" readonly>
