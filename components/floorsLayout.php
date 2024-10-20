@@ -179,8 +179,8 @@
 
               <div class="overview-footer">
                 <div class="pagination">
-                  <button class="prev-floor"><i class='bx bx-left-arrow-alt' ></i></button>
+                  <button class="prev-floor"><i class="fa-solid fa-arrow-left"></i></button>
                   <span class="floor-indicator">Floor 1</span>
-                  <button class="next-floor"><i class='bx bx-right-arrow-alt' ></i></button>
+                  <button class="next-floor"><i class="fa-solid fa-arrow-right"></i></button>
                 </div>
               </div>
