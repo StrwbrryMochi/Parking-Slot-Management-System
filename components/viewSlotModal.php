@@ -68,6 +68,7 @@
                     </li>
                   </ul>
                   <input type="hidden" id="hidden-time-in" name="time-in">
+                  <input type="hidden" id="hidden-page" name="current_page" value="<?php echo htmlspecialchars($current_page); ?>">
                 </div>
             </div>
         </div>
@@ -111,6 +112,8 @@
   const vehicleType = document.getElementById("modal-vehicle-type").innerText;
   const Status = document.getElementById("modal-status").innerText;
 
+  const editButton = document.getElementById('edit-button');
+
   // Populate Display Tex for Floor, Zone, & Slot
   document.getElementById("display-floor-edit").value = floor;
   document.getElementById("display-zone-edit").value = zone;
@@ -122,7 +125,7 @@
 
 // Function to manage vehicle type selection
 function manageVehicleTypeSelection() {
-  const carInput = document.getElementById("CarInputId");
+    const carInput = document.getElementById("CarInputId");
     const motorcycleInput = document.getElementById("MotorcycleInputId");
     const bikeInput = document.getElementById("BikeInputId");
 
@@ -149,8 +152,6 @@ function manageVehicleTypeSelection() {
 
 // Call the function to initialize the input states based on the current vehicle type
 manageVehicleTypeSelection();
-
-  
 
   const userTypeRadio = document.getElementsByName("user_type");
     userTypeRadio.forEach(radio => {
@@ -210,9 +211,10 @@ manageVehicleTypeSelection();
     document.getElementById("hidden-status").value = status;
     document.getElementById("form-time-in").value = timeIn;
 
+    const editButton = document.getElementById('edit-button');
+
     // Display Corresponding Data as Text
     document.getElementById("checkout-license-plate").innerText = licensePlate;
-    document.getElementById("checkout-user-type").innerText = userType;
     document.getElementById("checkout-vehicle-type").innerText = vehicleType;
     
     const currentTime = new Date();
@@ -326,5 +328,7 @@ manageVehicleTypeSelection();
         document.getElementById("checkout-fee").innerText = totalFee
         document.getElementById("hidden-fee").value = totalFee
     }
+    generateQRCode();
 });
 </script>
+
