@@ -1,6 +1,6 @@
 <?php 
 include '../php/connections.php';
-
+$current_page = 'StaffSlotOverview'; 
 ?>
 
 <!DOCTYPE html>
@@ -14,11 +14,11 @@ include '../php/connections.php';
     <link rel="stylesheet" href="../lib/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../lib/css/sweetalert.css">
     <link rel="stylesheet" href="../lib/css/toastr.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="../lib/icons/css/all.css"/>
     <script src="../lib/js/jquery-3.7.1.min.js"></script>
     <script src="../lib/js/bootstrap.bundle.js"></script>
     <script src="../lib/js/JsBarcode.all.min.js"></script>
+    <script src="../lib/js/qrious.min.js"></script>
     <script src="../lib/js/sweetalert.js"></script>
     <script src="../lib/js/toastr.js"></script>
     <!-- Styling -->
@@ -60,8 +60,8 @@ include '../php/connections.php';
               </div>
               <footer>
                 <div class="footer">
-                    <button><i class="fa-solid fa-house"></i></button>
-                    <button id="staffSlotManagement"><i class="fa-solid fa-car"></i></button>
+                    <button id="staffSlotManagement"><i class="fa-solid fa-house"></i></button>
+                    <button id="staffSlotOverview"><i class="fa-solid fa-car"></i></button>
                     <button><i class="fa-solid fa-circle-info"></i></button>
                     <button><i class="fa-solid fa-gear"></i></button>
                 </div>
@@ -73,11 +73,7 @@ include '../php/connections.php';
 <?php include '../components/viewSlotModal.php'; ?>
 <?php include '../components/editSlotModal.php'; ?>
 <?php include '../components/checkoutModal.php'; ?>
-
-<?php 
-$current_page = 'StaffSlotOverview'; 
-include '../components/addSlotModal.php'; 
-?>
+<?php include '../components/addSlotModal.php'; ?>
     
     <!-- Functions -->
     <script>
@@ -111,9 +107,12 @@ include '../components/addSlotModal.php';
                     // Set the button's inner text to the slot number
                     button.textContent = slotNumber;
 
-                    // Check if the status is "Occupied" and add the occupied class if truesoptoihgjd
+                    // Check if the status is "Occupied" and add the occupied class if truesoptoihgjd and if not, disable viewing the slot 
                     if (slot.status === 'Occupied') {
                         button.classList.add('occupied');
+                    } else {
+                        button.setAttribute('disabled', 'disabled');
+                        button.style.pointerEvents = 'none';
                     }
 
                     button.addEventListener('click', function () {
@@ -194,7 +193,10 @@ include '../components/addSlotModal.php';
     <script>
       document.addEventListener("DOMContentLoaded", function() {
         document.getElementById("staffSlotManagement").onclick = function () {
-          location.href = "StaffSlotManagement.php";
+            location.href = "staffSlotManagement.php";
+        }
+        document.getElementById("staffSlotOverview").onclick = function () {
+          location.href = "StaffSlotOverview.php";
         }
       });
      </script>
