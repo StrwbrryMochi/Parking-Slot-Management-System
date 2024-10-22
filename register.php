@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 exit;
             }
 
-            // Validate file size (e.g., max size 2MB)
+            // Validate file size 
             if ($fileSize > 2 * 1024 * 1024) {
                 echo "<script>alert('File size exceeds 2MB limit.'); window.location.href='register.php?register_error=true';</script>";
                 exit;
@@ -36,11 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             // Move the uploaded file to the uploads directory
             $uploadFileDir = 'uploads/';
-            $newFileName = uniqid() . '_' . basename($fileName); // Create a unique filename
+            $newFileName = uniqid() . '_' . basename($fileName);
             $dest_path = $uploadFileDir . $newFileName;
 
             if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                $photoFilePath = $newFileName; // Store the new file name for database insertion
+                $photoFilePath = $newFileName; 
             } else {
                 echo "<script>alert('There was an error moving the uploaded file.'); window.location.href='register.php?register_error=true';</script>";
                 exit;
@@ -85,7 +85,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $connections->prepare("INSERT INTO usertbl (Email, Password, FirstName, LastName, Gender, BirthDate, Address, PhoneNumber, Account_type, Photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $stmt->bind_param("ssssssssis", $Email, $hashedPassword, $FirstName, $LastName, $Gender, $BirthDate, $Address, $PhoneNumber, $Account_type, $photoFilePath);
 
-    // Execute the statement
     if ($stmt->execute()) {
         $_SESSION['Email'] = $Email;
         echo "<script>window.location.href='Staff/StaffSlotManagement.php?register_success=true';</script>";
@@ -93,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "<script>alert('Error registering user: " . $stmt->error . "'); window.location.href='register.php?register_error=true';</script>";
     }
 
-    // Close the statement and connection
     $stmt->close();
     $connections->close();
 }
@@ -333,23 +331,23 @@ document.getElementById('register').classList.add('active');
     function handleFiles(files) {
     fileInfo.innerHTML = '';
     if (files.length > 0) {
-        const file = files[0]; // Get the first file
-        if (file && file.type.startsWith('image/')) { // Check if it's an image
+        const file = files[0]; 
+        if (file && file.type.startsWith('image/')) {
             // Update the input's files property
-            fileInput.files = files; // Set the file input's files property
+            fileInput.files = files; 
 
             const reader = new FileReader();
             reader.onload = function (event) {
-                previewImg.src = event.target.result; // Set the preview image
-                previewImg.style.display = 'block'; // Show the image
+                previewImg.src = event.target.result; 
+                previewImg.style.display = 'block'; 
             };
             reader.readAsDataURL(file);
             fileInfo.innerHTML = `<p>${file.name} (${(file.size / 1024).toFixed(2)} KB)</p>`;
         } else {
             alert('Please upload a valid image file (JPEG, PNG, or GIF).');
-            fileInput.value = ''; // Clear the file input if the file is invalid
-            previewImg.style.display = 'none'; // Hide the preview image
-            fileInfo.innerHTML = ''; // Clear the file info
+            fileInput.value = ''; 
+            previewImg.style.display = 'none'; 
+            fileInfo.innerHTML = ''; 
         }
     }
 }
