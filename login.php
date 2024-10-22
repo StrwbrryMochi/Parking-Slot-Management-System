@@ -126,3 +126,13 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
         alert("it works");
     });
 </script>
+
+<script>
+     document.addEventListener("DOMContentLoaded", function() {
+        var content = document.querySelector(".content-container");
+        content.style.display = 'flex'; 
+        setTimeout(function() {
+            content.style.opacity = '1'; 
+        }, 10);  
+    });
+</script>
