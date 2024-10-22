@@ -1,5 +1,6 @@
 <?php 
 include '../php/connections.php';
+include '../php/fetchLoginData.php';
 $current_page = 'StaffSlotOverview'; 
 ?>
 
@@ -52,6 +53,7 @@ $current_page = 'StaffSlotOverview';
 
 <section>
 <?php include '../components/sidebarLeft.php'; ?>
+<?php include '../components/profileSnippet.php'; ?>
             <div class="parking-overview">
               <div class="slot-overview">
               <?php include '../php/parkingFunction.php';
@@ -63,7 +65,7 @@ $current_page = 'StaffSlotOverview';
                     <button id="staffSlotManagement"><i class="fa-solid fa-house"></i></button>
                     <button id="staffSlotOverview"><i class="fa-solid fa-car"></i></button>
                     <button><i class="fa-solid fa-circle-info"></i></button>
-                    <button><i class="fa-solid fa-gear"></i></button>
+                    <button id="snippetButton"><i class="fa-solid fa-gear"></i></button>
                 </div>
                 </footer>
             </div>
@@ -208,7 +210,7 @@ $current_page = 'StaffSlotOverview';
             document.getElementById('loader-container').style.display = 'none';
         }
      </script>
-     <script rel="javascript" src="../js/script.js"></script>
+     <script src="../js/modal.js"></script>
      <script src="../js/loading.js"></script>
      <script src="../js/floorPagination.js"></script>
      <script src="../js/section.js"></script>
