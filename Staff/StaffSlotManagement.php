@@ -1,5 +1,6 @@
 <?php 
 include '../php/connections.php';
+include '../php/fetchLoginData.php';
 include_once '../php/parkingFunction.php';
 $current_page = 'StaffSlotManagement'; 
 ?>
@@ -55,6 +56,7 @@ $current_page = 'StaffSlotManagement';
 
 <!-- Include the left sidebar -->
 <?php include '../components/sidebarLeft.php'; ?>
+<?php include '../components/profileSnippet.php'; ?>
 
 <div class="main-section">
     <?php include '../components/cards.php'; ?>
@@ -214,7 +216,7 @@ $current_page = 'StaffSlotManagement';
             <button id="staffSlotManagement"><i class="fa-solid fa-house"></i></button>
             <button id="staffSlotOverview"><i class="fa-solid fa-car"></i></button>
             <button><i class="fa-solid fa-circle-info"></i></button>
-            <button><i class="fa-solid fa-gear"></i></button>
+            <button id="snippetButton"><i class="fa-solid fa-gear"></i></button>
         </div>
     </footer>
 </div>
@@ -250,74 +252,74 @@ $current_page = 'StaffSlotManagement';
      </script>
 
     <script>
-        document.querySelectorAll('.view-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const selectedZone = this.getAttribute('data-zone');
-            const selectedSlot = this.getAttribute('data-slot-number');
-            const selectedFloor = this.getAttribute('data-floor');
-            const plateNumber = this.getAttribute('data-plate-number');
-            const userType = this.getAttribute('data-user-type');
-            const vehicleType = this.getAttribute('data-vehicle-type');
-            const status = this.getAttribute('data-status');
-            const timeIn = this.getAttribute('data-time-in');
+        document.querySelector('.parking-table').addEventListener('click', function (event) {
 
-            // Update the Bootstrap modal with the slot's information
-            document.getElementById('modal-floor').textContent = selectedFloor;
-            document.getElementById('modal-zone').textContent = selectedZone;
-            document.getElementById('modal-slot').textContent = selectedSlot;
-            document.getElementById('modal-license-plate').textContent = plateNumber;
-            document.getElementById('modal-user-type').textContent = userType;
-            document.getElementById('modal-vehicle-type').textContent = vehicleType;
-            document.getElementById('modal-status').textContent = status;
+            if (event.target.closest('.view-btn')) {
+                const button = event.target.closest('.view-btn'); 
+                const selectedZone = button.getAttribute('data-zone');
+                const selectedSlot = button.getAttribute('data-slot-number');
+                const selectedFloor = button.getAttribute('data-floor');
+                const plateNumber = button.getAttribute('data-plate-number');
+                const userType = button.getAttribute('data-user-type');
+                const vehicleType = button.getAttribute('data-vehicle-type');
+                const status = button.getAttribute('data-status');
+                const timeIn = button.getAttribute('data-time-in');
 
-            document.getElementById('hidden-time-in').value = timeIn;
+                document.getElementById('modal-floor').textContent = selectedFloor;
+                document.getElementById('modal-zone').textContent = selectedZone;
+                document.getElementById('modal-slot').textContent = selectedSlot;
+                document.getElementById('modal-license-plate').textContent = plateNumber;
+                document.getElementById('modal-user-type').textContent = userType;
+                document.getElementById('modal-vehicle-type').textContent = vehicleType;
+                document.getElementById('modal-status').textContent = status;
 
-             // Handle time_in: if it's 'null', empty, or invalid, hide the field
-             const modalTimeIn = document.getElementById('modal-time-in');
-                        const modalTimeInField = document.getElementById('modal-time-in-field');
+                document.getElementById('hidden-time-in').value = timeIn;
 
-                        if (timeIn && timeIn !== 'null' && timeIn.trim() !== '') {
-                            const date = new Date(timeIn);
-                            const formattedDate = date.toLocaleString('en-US', { 
-                                year: 'numeric', 
-                                month: '2-digit', 
-                                day: '2-digit', 
-                                hour: '2-digit', 
-                                minute: '2-digit', 
-                                hour12: true 
-                            });
-                            modalTimeIn.textContent = formattedDate;
-                            modalTimeInField.style.display = 'block'; 
-                        } else {
-                            modalTimeInField.style.display = 'none'; 
-                        }
+                // Handle time_in: if it's 'null', empty, or invalid, hide the field
+                const modalTimeIn = document.getElementById('modal-time-in');
+                const modalTimeInField = document.getElementById('modal-time-in-field');
 
-                        // Display vehicle type Image
-                        const vehicleImageContainer = document.querySelector('.view-vehicle-type');
-                        vehicleImageContainer.innerHTML = ''; 
+                if (timeIn && timeIn !== 'null' && timeIn.trim() !== '') {
+                    const date = new Date(timeIn);
+                    const formattedDate = date.toLocaleString('en-US', { 
+                        year: 'numeric', 
+                        month: '2-digit', 
+                        day: '2-digit', 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        hour12: true 
+                    });
+                    modalTimeIn.textContent = formattedDate;
+                    modalTimeInField.style.display = 'block'; 
+                } else {
+                    modalTimeInField.style.display = 'none'; 
+                }
 
-                        let imgSrc = '';
+                // Display vehicle type Image
+                const vehicleImageContainer = document.querySelector('.view-vehicle-type');
+                vehicleImageContainer.innerHTML = ''; 
 
-                        // Match vehicle type and set corresponding image
-                        if (vehicleType === 'Car') {
-                            imgSrc = '../img/Cars.svg';
-                        } else if (vehicleType === 'Motorcycle') {
-                            imgSrc = '../img/Moto.svg';
-                        } else if (vehicleType === 'Bicycle') {
-                            imgSrc = '../img/Bikes.svg';
-                        } else {
-                            imgSrc = '../img/Parking.svg'; 
-                        }
+                let imgSrc = '';
 
-                        const vehicleImg = document.createElement('img');
-                        vehicleImg.src = imgSrc;
-                        vehicleImg.alt = vehicleType;
-                        vehicleImageContainer.appendChild(vehicleImg);
+                // Match vehicle type and set corresponding image
+                if (vehicleType === 'Car') {
+                    imgSrc = '../img/Cars.svg';
+                } else if (vehicleType === 'Motorcycle') {
+                    imgSrc = '../img/Moto.svg';
+                } else if (vehicleType === 'Bicycle') {
+                    imgSrc = '../img/Bikes.svg';
+                } else {
+                    imgSrc = '../img/Parking.svg'; 
+                }
 
-            // Open the modal
-            $('#slotModal').modal('show');
+                const vehicleImg = document.createElement('img');
+                vehicleImg.src = imgSrc;
+                vehicleImg.alt = vehicleType;
+                vehicleImageContainer.appendChild(vehicleImg);
+
+                $('#slotModal').modal('show');
+            }
         });
-    });
     </script>
 
     <script>
@@ -350,33 +352,35 @@ $current_page = 'StaffSlotManagement';
     });
     </script>
 
-    <script Filter>
-        const ResetFilter = document.getElementById("resetFilter");
-        const searchFilter = document.getElementById('search');
-        const filterFloor = document.querySelectorAll("input[name='floors[]']");
-        const filterZone = document.querySelectorAll("input[name='zones[]']");
-        const filterVehicle = document.querySelectorAll("input[name='vehicle_types[]']");
+    <script>
+    const ResetFilter = document.getElementById("resetFilter");
+    const searchFilter = document.getElementById('search');
+    const filterFloor = document.querySelectorAll("input[name='floors[]']");
+    const filterZone = document.querySelectorAll("input[name='zones[]']");
+    const filterVehicle = document.querySelectorAll("input[name='vehicle_types[]']");
 
-        ResetFilter.addEventListener('click', function() {
+    ResetFilter.addEventListener('click', function() {
         filterFloor.forEach(function(checkbox) {
             checkbox.checked = false;
         });
-        
+
         filterZone.forEach(function(checkbox) {
             checkbox.checked = false;
         });
-        
+
         filterVehicle.forEach(function(checkbox) {
             checkbox.checked = false;
         });
 
         searchFilter.value = '';
-        
         resetTable();
     });
 
+    // Function to reset the table data
     function resetTable() {
         var searchQuery = '';
+
+        console.log('Sending AJAX request to reset table...');
 
         $.ajax({
             url: '../php/parkingExecute.php',
@@ -388,15 +392,17 @@ $current_page = 'StaffSlotManagement';
                 vehicle_types: []
             },
             success: function(data) {
+                console.log('AJAX request successful, updating table...');
                 $('.parking-table tbody').html(data);
             },
             error: function(xhr, status, error) {
-                console.error('Error:', error);
+                console.error('AJAX request failed:', error);
             }
         });
     }
     </script>
 
+     <script src="../js/modal.js"></script>
      <script src="../js/loading.js"></script>
      <script src="../js/section.js"></script>
 
