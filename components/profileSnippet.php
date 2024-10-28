@@ -3,7 +3,7 @@
         <div class="snippet-container">
             <div class="snippet-bg"></div>
             <div class="snippet-profile">
-                <img src="<?php echo htmlspecialchars($Photo); ?>" alt="">
+                <img class="profileButton" src="<?php echo htmlspecialchars($Photo); ?>" alt="">
                 <span class="circle <?php echo $status == 'online' ? 'online' : 'offline'; ?>"></span>
             </div>
             <div class="snippet-content">
@@ -16,9 +16,9 @@
                     </div>
                 </div>
                 <div class="snippet-actions">
-                    <button type="button"> <i class="fa-solid fa-user"></i> View Profile</button>
+                    <button type="button" class="profileButton"> <i class="fa-solid fa-user"></i> View Profile</button>
                     <div class="divide"></div>
-                    <button type="button"> <i class="fa-solid fa-pencil"></i> Edit Profile</button>
+                    <button type="button" class="editProfile"> <i class="fa-solid fa-pencil"></i> Edit Profile</button>
                 </div>
                 
                 <div class="snippet-logout">
