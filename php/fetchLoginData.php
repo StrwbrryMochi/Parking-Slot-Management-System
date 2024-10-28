@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -9,7 +8,7 @@ if (isset($_SESSION['Email'])) {
 
     include 'connections.php'; 
 
-    // Fetch all necessary data, including the status
+    // Fetch all necessary data
     $sqlfetch = "SELECT * FROM usertbl WHERE Email = ?";
     $stmt = $connections->prepare($sqlfetch);
     
@@ -26,19 +25,34 @@ if (isset($_SESSION['Email'])) {
     $result = $stmt->get_result();
     
     if ($result && $result->num_rows > 0) {
+        // Fetch data into $row
         $row = $result->fetch_assoc();
-        $userID = $row['userID'];
-        $Email = $row['Email'];
-        $Password = $row['Password'];
+        
+        // Assign individual variables from $row
         $FirstName = $row['FirstName'];
         $LastName = $row['LastName'];
+        $Email = $row['Email'];
         $Gender = $row['Gender'];
+        $PhoneNumber = $row['PhoneNumber'];
         $BirthDate = $row['BirthDate'];
         $Address = $row['Address'];
-        $PhoneNumber = $row['PhoneNumber'];
         $Photo = '../uploads/' . $row['Photo'];
         $Account_type = $row['Account_type'];
         $Status = $row['Status']; 
+
+        // Create the $currentUser array after fetching for Editing User
+        $currentUser = [
+            'FirstName' => $FirstName,
+            'LastName' => $LastName,
+            'Email' => $Email,
+            'Gender' => $Gender,
+            'PhoneNumber' => $PhoneNumber,
+            'BirthDate' => $BirthDate,
+            'Address' => $Address,
+            'Photo' => $Photo,
+            'Account_type' => $Account_type,
+            'Status' => $Status
+        ];
 
         // Set account role if staff
         if ($Account_type == 2) {
@@ -77,6 +91,4 @@ if (isset($_SESSION['Email'])) {
     echo "<script>window.location.href='../staffPage/session.php?session=error';</script>";
     exit;
 }
-
-
-
+?>
