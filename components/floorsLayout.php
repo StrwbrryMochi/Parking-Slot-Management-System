@@ -1,4 +1,4 @@
-<div class="slot-overview-header"><h2>Slot Overview</h2></div>
+<div class="slot-overview-header"></div>
                 <div class="overview-container">
 
                 <div id="floor-1" class="floor active">
