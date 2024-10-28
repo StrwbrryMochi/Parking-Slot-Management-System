@@ -77,62 +77,129 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     <link rel="stylesheet" href="lib/icons/css/all.css"/>
     <script src="lib/js/jquery-3.7.1.min.js"></script>
     <script src="lib/js/sweetalert.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/SmoothState.js/0.1.3/jquery.smoothState.min.js"></script>
     <!-- Styling -->
     <link rel="stylesheet" href="auth.css">
 </head>
 <body>
-    <div class="main-container">
-        <div class="wrapper">
-            <div class="back-button">
-                <a href=""><i class="fa-solid fa-house"></i></a>
-            </div>
-            <form action="login.php" method="POST">
-            <div class="content-container">
-                <div class="logo">
-                    <img src="img/logo.png" alt="">
-                    <div class="header">Log In <span>To Your Account</span></div>
-                </div>
-                <div class="content">
-                    <div class="input-container">
-                        <span class="input-title">EMAIL</span>
-                        <input type="text" id="Email" name="Email" autocomplete="off" placeholder="">
-                        <label for="Email"><i class="fa-solid fa-user"></i></label>
-                    </div>
-                    <div class="input-container">
-                        <span class="input-title">PASSWORD</span>
-                        <input type="password" id="Password" name="Password" placeholder="">
-                        <label for="Password"><i class="fa-solid fa-unlock"></i></label>
-                        <button type="button" class="input-button">Show</button>
-                    </div>
-                    <div class="button-container">
-                        <button type="submit">Log In</button>
-                        <span>Don't Have an Account ? <a href="register.php">Sign Up</a></span>
-                    </div>
-                </div>
-            </div>
-            </form>
+
+<main id="main" class="smoothState">
+<div class="image-container">
+    <?php include 'components/Auth/loginImg.php';?>
+</div>
+
+<div class="main-container">
+    <div class="logo-container">
+        <img src="img/logo.png" alt="Logo">
+        <div class="intro">
+            <h3>Welcome back!</h3>
+            <p>Please enter your details</p>
         </div>
     </div>
-    <div class="image-container">
-        <div class="svg-container"></div>
+    <form id="submitForm" action="login.php" method="POST" novalidate>
+    <div class="input-container">
+        <div class="input">
+            <input type="email" id="Email" placeholder="" autocomplete="off" name="Email" >
+            <label for="Email">Email</label>
+            <div class="error-message" id="email-invalid"></div>
+        </div>
+        <div class="input">
+            <input type="password" id="Password" placeholder="" name="Password" >
+            <label for="Password">Password</label>
+            <i id="eye" class="fa-regular fa-eye"></i>
+            <div class="error-message" id="password-invalid"></div>
+        </div>
+        <button type="submit" id="submit">Log in</button>
     </div>
+    </form>
+    <div class="footer">
+        <p>Don't have an Account?</p>
+        <a href="register.php" class="link">Sign Up</a>
+    </div>
+</div>
+</main>
+    
 </body>
 </html>
 
-<script>
-    const button = document.querySelector(".buttons");
-
-    button.addEventListener('click', function() {
-        alert("it works");
-    });
-</script>
+<?php include 'php/alerts.php' ?>
 
 <script>
-     document.addEventListener("DOMContentLoaded", function() {
-        var content = document.querySelector(".content-container");
-        content.style.display = 'flex'; 
-        setTimeout(function() {
-            content.style.opacity = '1'; 
-        }, 10);  
-    });
+// Function to validate email format
+function isValidEmail(email) {
+    const regex = /^[a-zA-Z0-9._%+-]+@(gmail|yahoo|outlook|hotmail|icloud|aol|protonmail)\.(com|org|net|gov|edu|info|co|io|me)$/i;
+    return regex.test(email);
+}
+
+function displayEmailError(message) {
+    const emailErrorDiv = document.getElementById('email-invalid');
+    emailErrorDiv.textContent = message;
+    emailErrorDiv.classList.remove("show");
+    void emailErrorDiv.offsetWidth;
+    emailErrorDiv.classList.add("show");
+}
+
+function displayPasswordError(message) {
+    const passwordErrorDiv = document.getElementById('password-invalid');
+    passwordErrorDiv.textContent = message;
+    passwordErrorDiv.classList.remove("show");
+    void passwordErrorDiv.offsetWidth; 
+    passwordErrorDiv.classList.add("show");
+}
+
+// Add event listener to the form submit event
+document.getElementById('submitForm').addEventListener('submit', function(event) {
+    console.log("Form submit event triggered.");
+
+    const emailInput = document.getElementById('Email');
+    const passInput = document.getElementById('Password');
+    let formIsValid = true;
+
+    // Clear previous error messages
+    displayEmailError('');
+    displayPasswordError('');
+
+    if (emailInput.value.trim() === '') {
+        displayEmailError('Please provide an email address before proceeding!');
+        formIsValid = false;
+    } else if (!isValidEmail(emailInput.value)) {
+        displayEmailError('Please enter a valid email address!');
+        formIsValid = false;
+    } else {
+        // Only check the password if the email is valid
+        if (passInput.value.trim() === '') {
+            displayPasswordError('Please provide a password before proceeding!');
+            formIsValid = false;
+        }
+    }
+
+    if (!formIsValid) {
+        event.preventDefault();
+    } 
+});
 </script>
+
+
+
+<script Input Caret>
+    document.querySelectorAll('.input-container input').forEach(input => {
+    input.addEventListener('focus', function() {
+        const label = input.nextElementSibling;
+
+        label.addEventListener('transitionend', function handleTransitionEnd(event) {
+            if (event.propertyName === 'top') {
+                input.style.caretColor = '#000';
+                label.removeEventListener('transitionend', handleTransitionEnd); 
+            }
+        });
+    });
+
+    input.addEventListener('blur', function() {
+        if (!input.value) {
+            input.style.caretColor = 'transparent';
+        }
+    });
+});
+</script>
+
+<script src="js/togglePassword.js"></script>
