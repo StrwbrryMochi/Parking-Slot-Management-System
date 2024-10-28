@@ -37,6 +37,27 @@ if (isset($_GET['register_success']) && $_GET['register_success'] == 'true') {
     </script>";
 }
 
+if (isset($_GET['email_error']) && $_GET['email_error'] == 'true') {
+    echo "<script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Account does not Exist!',
+            timer: 2000
+        });
+    </script>";
+}
+
+if (isset($_GET['password_error']) && $_GET['password_error'] == 'true') {
+    echo "<script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Password Incorrect!',
+            timer: 2000
+        });
+    </script>";
+}
 
 //* Parking Slot Management
 // Add
