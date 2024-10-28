@@ -16,13 +16,14 @@ $current_page = 'StaffSlotManagement';
     <link rel="stylesheet" href="../lib/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../lib/css/sweetalert.css">
     <link rel="stylesheet" href="../lib/css/toastr.css">
+    <link rel="stylesheet" href="../lib/css/flatpickr.min.css">
     <link rel="stylesheet" href="../lib/icons/css/all.css"/>
     <script src="../lib/js/jquery-3.7.1.min.js"></script>
     <script src="../lib/js/bootstrap.bundle.js"></script>
-    <script src="../lib/js/JsBarcode.all.min.js"></script>
     <script src="../lib/js/qrious.min.js"></script>
     <script src="../lib/js/sweetalert.js"></script>
     <script src="../lib/js/toastr.js"></script>
+    <script src="../lib/js/flatpickr.min.js"></script>
     <!-- Styling -->
     <link rel="stylesheet" href="../style.css">
 </head>
@@ -56,7 +57,6 @@ $current_page = 'StaffSlotManagement';
 
 <!-- Include the left sidebar -->
 <?php include '../components/sidebarLeft.php'; ?>
-<?php include '../components/profileSnippet.php'; ?>
 
 <div class="main-section">
     <?php include '../components/cards.php'; ?>
@@ -73,6 +73,7 @@ $current_page = 'StaffSlotManagement';
                         <th>Slot</th>
                         <th>Plate Number</th>
                         <th>Vehicle</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -80,7 +81,7 @@ $current_page = 'StaffSlotManagement';
                 <?php
                     // Filter for occupied slots
                     $occupiedSlots = array_filter($fetchParking, function($parkingData) {
-                        return $parkingData['status'] === 'Occupied'; 
+                        return $parkingData['status'] === 'Occupied' && 'Overstay'; 
                     });
 
                     if (empty($occupiedSlots)) {
@@ -95,19 +96,23 @@ $current_page = 'StaffSlotManagement';
                         <td><?php echo htmlspecialchars($parkingData['slot_number']); ?></td>
                         <td><?php echo htmlspecialchars($parkingData['plate_number']); ?></td>
                         <td><?php echo htmlspecialchars($parkingData['vehicle_type']); ?></td>
-                        <td><button
-                        class="view-btn"
-                        data-slot-id="<?php echo htmlspecialchars($parkingData['slot_id']); ?>" 
-                        data-floor="<?php echo htmlspecialchars($parkingData['floor']); ?>" 
-                        data-zone="<?php echo htmlspecialchars($parkingData['zone']); ?>" 
-                        data-slot-number="<?php echo htmlspecialchars($parkingData['slot_number']); ?>" 
-                        data-plate-number="<?php echo htmlspecialchars($parkingData['plate_number']); ?>"
-                        data-user-type="<?php echo htmlspecialchars($parkingData['user_type']); ?>" 
-                        data-vehicle-type="<?php echo htmlspecialchars($parkingData['vehicle_type']); ?>"
-                        data-status="<?php echo htmlspecialchars($parkingData['status']); ?>"
-                        data-time-in="<?php echo htmlspecialchars($parkingData['time_in']); ?>"
-                        data-toggle="modal"
-                        data-target="#slotModal" >View</button></td>
+                        <td><?php echo htmlspecialchars($parkingData['status']); ?></td>
+                        <td>
+                            <button
+                            class="view-btn"
+                            data-slot-id="<?php echo htmlspecialchars($parkingData['slot_id']); ?>" 
+                            data-floor="<?php echo htmlspecialchars($parkingData['floor']); ?>" 
+                            data-zone="<?php echo htmlspecialchars($parkingData['zone']); ?>" 
+                            data-slot-number="<?php echo htmlspecialchars($parkingData['slot_number']); ?>" 
+                            data-plate-number="<?php echo htmlspecialchars($parkingData['plate_number']); ?>"
+                            data-user-type="<?php echo htmlspecialchars($parkingData['user_type']); ?>" 
+                            data-vehicle-type="<?php echo htmlspecialchars($parkingData['vehicle_type']); ?>"
+                            data-status="<?php echo htmlspecialchars($parkingData['status']); ?>"
+                            data-time-in="<?php echo htmlspecialchars($parkingData['time_in']); ?>"
+                            data-toggle="modal"
+                            data-target="#slotModal" >View
+                            </button>
+                        </td>
                     </tr>
                     <?php endforeach; 
                     }
@@ -216,7 +221,7 @@ $current_page = 'StaffSlotManagement';
             <button id="staffSlotManagement"><i class="fa-solid fa-house"></i></button>
             <button id="staffSlotOverview"><i class="fa-solid fa-car"></i></button>
             <button><i class="fa-solid fa-circle-info"></i></button>
-            <button id="snippetButton"><i class="fa-solid fa-gear"></i></button>
+            <button id="snippetButton"><i class="fa-solid fa-user"></i></button>
         </div>
     </footer>
 </div>
@@ -224,12 +229,46 @@ $current_page = 'StaffSlotManagement';
 <!-- Include the right sidebar -->
 <?php include '../components/sidebarRight.php'; ?>
 
+
 <?php include '../components/viewSlotModal.php'; ?>
 <?php include '../components/editSlotModal.php'; ?>
 <?php include '../components/checkoutModal.php'; ?>
 <?php include '../components/addSlotModal.php'; ?>
 
 </section>
+
+<?php include '../components/profileSnippet.php'; ?>
+<?php include '../components/profileModal.php'; ?>
+<?php include '../components/editProfileModal.php'; ?>
+<?php include '../components/passwordModal.php'; ?>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+if (
+  urlParams.has("add_slot") ||
+  urlParams.has("edit_slot") ||
+  urlParams.has("checkout_slot") ||
+  urlParams.has("change_user") ||
+  urlParams.has("password_changed")
+) {
+  document.getElementById("loader-container").style.display = "none";
+
+  // Disable the header immediately
+  document.querySelector("header").classList.add("disabled");
+
+  // Disable all elements with the class "cards"
+  document.querySelectorAll(".cards").forEach((card) => {
+    card.classList.add("disabled");
+  });
+
+  // Disable other specified elements
+  document.querySelector(".reserved-list-container").classList.add("disabled");
+  document.querySelector(".sidebar").classList.add("disabled");
+  document.querySelector(".table-container").classList.add("disabled");
+  document.querySelector(".filter-container").classList.add("disabled");
+}
+
+</script>
 
      <script>
       document.addEventListener("DOMContentLoaded", function() {
@@ -240,15 +279,6 @@ $current_page = 'StaffSlotManagement';
           location.href = "StaffSlotOverview.php";
         }
       });
-     </script>
-
-     <script>
-        // Add Slot 
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('add_slot') || urlParams.has('edit_slot') || urlParams.has('checkout_slot')) {
-            
-            document.getElementById('loader-container').style.display = 'none';
-        }
      </script>
 
     <script>
@@ -402,6 +432,7 @@ $current_page = 'StaffSlotManagement';
     }
     </script>
 
+    
      <script src="../js/modal.js"></script>
      <script src="../js/loading.js"></script>
      <script src="../js/section.js"></script>

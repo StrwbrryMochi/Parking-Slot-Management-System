@@ -15,6 +15,7 @@ $current_page = 'StaffSlotOverview';
     <link rel="stylesheet" href="../lib/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../lib/css/sweetalert.css">
     <link rel="stylesheet" href="../lib/css/toastr.css">
+    <link rel="stylesheet" href="../lib/css/flatpickr.min.css">
     <link rel="stylesheet" href="../lib/icons/css/all.css"/>
     <script src="../lib/js/jquery-3.7.1.min.js"></script>
     <script src="../lib/js/bootstrap.bundle.js"></script>
@@ -22,6 +23,7 @@ $current_page = 'StaffSlotOverview';
     <script src="../lib/js/qrious.min.js"></script>
     <script src="../lib/js/sweetalert.js"></script>
     <script src="../lib/js/toastr.js"></script>
+    <script src="../lib/js/flatpickr.min.js"></script>
     <!-- Styling -->
     <link rel="stylesheet" href="../style.css">
 </head>
@@ -53,7 +55,6 @@ $current_page = 'StaffSlotOverview';
 
 <section>
 <?php include '../components/sidebarLeft.php'; ?>
-<?php include '../components/profileSnippet.php'; ?>
             <div class="parking-overview">
               <div class="slot-overview">
               <?php include '../php/parkingFunction.php';
@@ -65,17 +66,22 @@ $current_page = 'StaffSlotOverview';
                     <button id="staffSlotManagement"><i class="fa-solid fa-house"></i></button>
                     <button id="staffSlotOverview"><i class="fa-solid fa-car"></i></button>
                     <button><i class="fa-solid fa-circle-info"></i></button>
-                    <button id="snippetButton"><i class="fa-solid fa-gear"></i></button>
+                    <button id="snippetButton"><i class="fa-solid fa-user"></i></button>
                 </div>
                 </footer>
             </div>
 <?php include '../components/sidebarRight.php'; ?>
 </section>
 
+<?php include '../components/profileSnippet.php'; ?>
+<?php include '../components/profileModal.php'; ?>
+<?php include '../components/editProfileModal.php'; ?>
+<?php include '../components/passwordModal.php'; ?>
 <?php include '../components/viewSlotModal.php'; ?>
 <?php include '../components/editSlotModal.php'; ?>
 <?php include '../components/checkoutModal.php'; ?>
 <?php include '../components/addSlotModal.php'; ?>
+
     
     <!-- Functions -->
     <script>
@@ -202,14 +208,28 @@ $current_page = 'StaffSlotOverview';
         }
       });
      </script>
-     <script>
-        // Read the page url if it has said params to disable loader
+
+    <script>
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('add_slot') || urlParams.has('edit_slot') || urlParams.has('checkout_slot')) {
-            
-            document.getElementById('loader-container').style.display = 'none';
-        }
-     </script>
+if (
+  urlParams.has("add_slot") ||
+  urlParams.has("edit_slot") ||
+  urlParams.has("checkout_slot") ||
+  urlParams.has("change_user") ||
+  urlParams.has("password_changed")
+) {
+  document.getElementById("loader-container").style.display = "none";
+
+  // Disable the header immediately
+  document.querySelector("header").classList.add("disabled");
+
+  // Disable other specified elements
+  document.querySelector(".reserved-list-container").classList.add("disabled");
+  document.querySelector(".sidebar").classList.add("disabled");
+  document.querySelector(".slot-overview").classList.add("disabled");
+}
+
+    </script>
      <script src="../js/modal.js"></script>
      <script src="../js/loading.js"></script>
      <script src="../js/floorPagination.js"></script>
