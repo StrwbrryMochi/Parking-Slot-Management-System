@@ -90,6 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
                 <td><?php echo htmlspecialchars($parkingData['slot_number']); ?></td>
                 <td><?php echo htmlspecialchars($parkingData['plate_number']); ?></td>
                 <td><?php echo htmlspecialchars($parkingData['vehicle_type']); ?></td>
+                <td><?php echo htmlspecialchars($parkingData['status']); ?></td>
                 <td>
                     <button
                         class="view-btn"
