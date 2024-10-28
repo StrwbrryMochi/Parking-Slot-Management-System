@@ -320,15 +320,30 @@ manageVehicleTypeSelection();
         // Display the Human-readable Duration text in the checkout-duration element
         document.getElementById("checkout-duration").innerText = formattedDurationText;
 
-        const feeRates = { Bicycle:2, Motorcycle: 5, Car: 10};
+        const feeRates = { Bicycle:2, Motorcycle: 5, Car: 10 };
+        const fixedRates = { Bicycle: 25, Motorcycle: 35, Car: 50 };
 
-        const feePerHour = feeRates[vehicleType] || 0;
-        const totalFee = chargeableDurationHrs * feePerHour;
+        let totalFee;
+
+        if (vehicleType in fixedRates) {
+          if (chargeableDurationHrs <= 8) {
+            totalFee = fixedRates[vehicleType];
+          } else {
+            const additionalHours = chargeableDurationHrs - 8;
+            const feePerHour = feeRates[vehicleType] || 0;
+            totalFee = fixedRates[vehicleType] + additionalHours * feePerHour;
+          }
+        } else {
+          totalFee = 0;
+        }
+
         console.log('Total Fee: ', totalFee.toFixed(2));
         document.getElementById("checkout-fee").innerText = totalFee
         document.getElementById("hidden-fee").value = totalFee
+
+        generateQRCode();
     }
-    generateQRCode();
 });
+
 </script>
 
