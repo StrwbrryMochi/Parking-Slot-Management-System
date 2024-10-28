@@ -1,10 +1,10 @@
 <div class="sidebar">
     <div class="sidebar-contents">
         <div class="user-profile">
-         <img src="<?php echo htmlspecialchars($Photo)?>" alt="">
+            <img class="profileButton" src="<?php echo htmlspecialchars($Photo)?>" alt="">
          <div class="user-info">
-         <h2><?php echo htmlspecialchars($FirstName)?></h2>
-         <p><?php echo htmlspecialchars($Account_role)?></p>
+            <h2><?php echo htmlspecialchars($FirstName)?></h2>
+            <p><?php echo htmlspecialchars($Account_role)?></p>
          </div>
         </div>
         <div class="sidebar-button">
