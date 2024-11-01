@@ -118,13 +118,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $response = [
                     'status' => 'success',
                     'message' => 'Profile updated successfully!',
-                    'redirect' => '../Staff/StaffSlotManagement.php?add_slot=true'
+                    'redirect' => '../Staff/StaffSlotManagement.php?user_edit=true'
                 ];
             } else {
                 $response = [
                     'status' => 'success',
                     'message' => 'Profile updated successfully!',
-                    'redirect' => '../Staff/StaffSlotOverview.php?add_slot=true'
+                    'redirect' => '../Staff/StaffSlotOverview.php?user_edit=true'
                 ]; 
             }
         } else {
