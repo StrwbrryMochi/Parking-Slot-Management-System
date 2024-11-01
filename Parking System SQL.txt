@@ -46,6 +46,24 @@ CREATE TABLE parking_tbl (
     slot_number INT(11) NOT NULL
 );
 
+// * Parking Slot Columns SQL Setup
+CREATE TABLE archive_tbl (
+    id BIGINT(20) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    slot_id INT(11) NOT NULL,
+    plate_number VARCHAR(20) DEFAULT NULL,
+    user_type VARCHAR(50) NOT NULL,
+    vehicle_type VARCHAR(50) NOT NULL,
+    status ENUM('Available', 'Occupied', 'Reserved') DEFAULT 'Available',
+    time_in DATETIME DEFAULT NULL,
+    time_out DATETIME DEFAULT NULL,
+    duration TIME DEFAULT NULL,
+    fee INT(11) NOT NULL,
+    payment_status VARCHAR(255) NOT NULL,
+    floor INT(11) NOT NULL,
+    zone VARCHAR(1) NOT NULL,
+    slot_number INT(11) NOT NULL
+);
+
 
 // * Parking Slots Setup 
 INSERT INTO parking_tbl (slot_id, plate_number, user_type, vehicle_type, status, time_in, time_out, duration, fee, payment_status, floor, zone, slot_number) VALUES 
