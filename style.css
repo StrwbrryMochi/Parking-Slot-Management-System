@@ -2479,10 +2479,6 @@ form {
 }
 
 /* View Profile Modal */
-.profileModal-Overlay {
-  background: rgba(0, 0, 0, 0.5);
-}
-
 .profileModal-Container {
   display: none;
   position: absolute;
