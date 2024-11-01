@@ -248,7 +248,7 @@ if (
   urlParams.has("add_slot") ||
   urlParams.has("edit_slot") ||
   urlParams.has("checkout_slot") ||
-  urlParams.has("change_user") ||
+  urlParams.has("user_edit") ||
   urlParams.has("password_changed")
 ) {
   document.getElementById("loader-container").style.display = "none";
