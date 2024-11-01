@@ -22,7 +22,7 @@
                 <input type="hidden" name="current_page" id="current_page" value="<?php echo htmlspecialchars($current_page); ?>">
         </div>
         <div class="new-password-footer">
-            <a class="close-newpass-btn">Cancel</a>
+            <a class="editProfile">Cancel</a>
             <button type="submit">Done</button>
         </div>
         </form>
