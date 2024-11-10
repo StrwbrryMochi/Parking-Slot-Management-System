@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Password is correct, start the session based on account type
                 $_SESSION['Email'] = $Email;
                 if ($db_account_type == "1") {
-                    echo "<script>window.location.href='adminPage/adminDashboard.php?welcome_admin=true';</script>";
+                    echo "<script>window.location.href='Admin/Dashboard.php?welcome_admin=true';</script>";
                 } elseif ($db_account_type == "2") {
                     echo "<script>window.location.href='Staff/StaffSlotManagement.php?welcome_user=true';</script>";
                 } else {
