@@ -97,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (!$isChanged) {
             $response = [
                 'status' => 'no_change',
-                'message' => 'No changes detected. Please update your details.'
+                'message' => 'Please update your details.'
             ];
             echo json_encode($response);
             exit;
@@ -142,7 +142,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 } else {
     $response = [
         'status' => 'error',
-        'message' => 'Invalid request method. Please use POST.'
+        'message' => 'Invalid request method.'
     ];
 }
 
