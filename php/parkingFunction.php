@@ -26,6 +26,54 @@ function fetchParking() {
     }
 }
 
+function fetchRevenue() {
+    global $connections;
+
+    if ($connections->ping()) {
+        $sql = "SELECT time_out, fee FROM archive_tbl";
+        $result = mysqli_query($connections, $sql);
+
+        if (!$result) {
+            echo "Error executing query: " . mysqli_error($connections);
+            return [];
+        }
+
+        $revenueFetch = [];
+        while ($row = mysqli_fetch_assoc($result)) {
+            $revenueFetch[] = $row; // Collect all rows
+        }
+
+        return json_encode($revenueFetch); // Convert data to JSON for JavaScript
+    } else {
+        echo "Error: Database connection is closed.";
+        return json_encode([]);
+    }
+}
+
+function fetchArchive() {
+    global $connections;
+
+    if ($connections->ping()) {
+        $sql = "SELECT * FROM archive_tbl;";
+        $result = mysqli_query($connections, $sql);
+
+        if (!$result) {
+            echo "Error executing query: " . mysqli_error($connections);
+            return[];
+        }
+
+        $archiveFetch = [];
+        while($row = mysqli_fetch_assoc($result)) {
+            $archiveFetch[] = $row;
+        }
+
+        return $archiveFetch;
+    } else {
+        echo "Error: Database connection is closed.";
+        return [];
+    }
+}
+
 //* To Assign a Slot
 function slotAdd($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userType, $current_page) {
     global $connections;
