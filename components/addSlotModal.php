@@ -15,9 +15,18 @@
             <?php
             $parkingSlots = fetchParking();
             $occupiedSlots = [];
+            $unavailableSlots = [];
             foreach ($parkingSlots as $slot) {
                 if ($slot['status'] === 'Occupied') {
                     $occupiedSlots[] = [
+                        'floor' => $slot['floor'],
+                        'zone' => $slot['zone'],
+                        'slot_number' => $slot['slot_number']
+                    ];
+                }
+
+                if ($slot['status'] === 'Unavailable') {
+                    $unavailableSlots[] = [
                         'floor' => $slot['floor'],
                         'zone' => $slot['zone'],
                         'slot_number' => $slot['slot_number']
@@ -29,6 +38,8 @@
                     <div class="lists-wrapper">
                         <div class="floor-container">
                         <input type="hidden" name="current_page" value="<?php echo htmlspecialchars($current_page); ?>">
+                        <input type="hidden" name="Name" value="<?php echo htmlspecialchars($FirstName) . ' ' .  htmlspecialchars($LastName)?>">
+                        <input type="hidden" name="assignedPhoto" value="<?php echo htmlspecialchars($Photo)?>">
                             <div class="floor-header">Select Floor</div>
                                 <div class="floor-input-container">
                                     <label>
@@ -203,49 +214,21 @@
 
 <script>
  const occupiedSlots = <?php echo json_encode($occupiedSlots); ?>;
+ const unavailableSlots = <?php echo json_encode($unavailableSlots); ?>;
 
 let selectedFloor = null;
 let selectedZone = null;
 
-// Listen for floor selection change
-document.querySelectorAll('input[name="floor"]').forEach(input => {
-    input.addEventListener('change', function() {
-        selectedFloor = this.value;
-        updateOccupiedSlots();
-        toggleVehicleType();
-    });
-});
-
-// Listen for zone selection change
-document.querySelectorAll('input[name="zone"]').forEach(input => {
-    input.addEventListener('change', function() {
-        selectedZone = this.value;
-        updateOccupiedSlots();
-        toggleVehicleType();
-    });
-});
-
-// Function to update occupied slot appearance
-function updateOccupiedSlots() {
-    if (!selectedFloor || !selectedZone) return;
-
-    // Reset all slots first (remove the occupied class and keep checked slots if available)
-    document.querySelectorAll('.slot-group input').forEach(slotInput => {
-        const label = slotInput.parentElement;
-        label.classList.remove('occupied');
-        slotInput.disabled = false;
-    });
-
-    // Loop through the occupied slots and highlight them
-    occupiedSlots.forEach(slot => {
+function applySlotStatus(slots, className) {
+    slots.forEach(slot => {
         if (slot.floor === selectedFloor && slot.zone === selectedZone) {
             const slotInput = document.querySelector(`input[name="slot_number"][value="${slot.slot_number}"]`);
             if (slotInput) {
                 const label = slotInput.parentElement;
-                label.classList.add('occupied');
+                label.classList.add(className);
                 slotInput.disabled = true;
 
-                // If the slot is checked, uncheck it O_O
+                // If the slot is checked, uncheck it
                 if (slotInput.checked) {
                     slotInput.checked = false;
                 }
@@ -253,6 +236,36 @@ function updateOccupiedSlots() {
         }
     });
 }
+
+function updateSlots() {
+    // Reset all slots first (remove the occupied and unavailable classes and re-enable all slots)
+    document.querySelectorAll('.slot-group input').forEach(slotInput => {
+        const label = slotInput.parentElement;
+        label.classList.remove('occupied', 'unavailable');
+        slotInput.disabled = false;
+    });
+
+    // Apply classes for occupied and unavailable slots
+    applySlotStatus(occupiedSlots, 'occupied');
+    applySlotStatus(unavailableSlots, 'unavailable');
+}
+
+// Listen for floor and zone selection changes
+document.querySelectorAll('input[name="floor"]').forEach(input => {
+    input.addEventListener('change', function() {
+        selectedFloor = this.value;
+        updateSlots();
+        toggleVehicleType();
+    });
+});
+
+document.querySelectorAll('input[name="zone"]').forEach(input => {
+    input.addEventListener('change', function() {
+        selectedZone = this.value;
+        updateSlots();
+        toggleVehicleType();
+    });
+});
 
 // Brute Forcing Input Disabling cuz disabling via input name and value don't work lol...
 function toggleVehicleType() {
