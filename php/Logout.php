@@ -6,9 +6,12 @@ if (isset($_SESSION['Email'])) {
 
     $Email = $_SESSION['Email'];
 
-    $updateSql = "UPDATE usertbl SET Status = 'Offline' WHERE Email = ?";
+    date_default_timezone_set('Asia/Manila');
+    $current_time = date('Y-m-d');
+
+    $updateSql = "UPDATE usertbl SET Status = 'Offline', Last_active = ?  WHERE Email = ?";
     $stmt = $connections->prepare($updateSql);
-    $stmt->bind_param("s", $Email);
+    $stmt->bind_param("ss", $current_time, $Email);
     $stmt->execute();
     $stmt->close();
     $connections->close();
