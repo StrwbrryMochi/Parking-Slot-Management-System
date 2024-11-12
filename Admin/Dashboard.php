@@ -1,6 +1,7 @@
 <?php include '../php/connections.php';
       include '../php/adminLoginData.php';    
       include '../php/parkingFunction.php';
+      $current_page = 'Dashboard'; 
 ?>
 
 <!DOCTYPE html>
@@ -62,7 +63,7 @@
 
     </div>
 
-    <section class="content">
+    <section id="content" class="content">
         <?php include '../components/Admin/Navigation.php'; ?>
         <?php 
         $parkingData = fetchParking();
@@ -228,10 +229,15 @@
         </div>
     </section>
 
+
+    <?php include '../components/Admin/EditProfile.php'; ?>
     <?php include '../components/Admin/SnipModal.php'; ?>
+    <?php include '../components/Admin/ProfileModal.php'; ?>
+    <?php include '../components/Admin/PasswordModal.php'; ?>
 
     <script src="../js/Admin/modal.js"></script>
     <script src="../js/toggleSidebar.js"></script>
+    <script src="../js/Admin/pageTransition.js"></script>
 
     <script Progress Bar>
         document.addEventListener("DOMContentLoaded", function () {
