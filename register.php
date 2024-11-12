@@ -81,9 +81,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Hash the password
     $hashedPassword = password_hash($Password, PASSWORD_DEFAULT);
 
+    date_default_timezone_set('Asia/Manila');
+    $current_time = date('Y-m-d');
+
     // Prepare to insert data into the database
-    $stmt = $connections->prepare("INSERT INTO usertbl (Email, Password, FirstName, LastName, Gender, BirthDate, Address, PhoneNumber, Account_type, Photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssssis", $Email, $hashedPassword, $FirstName, $LastName, $Gender, $BirthDate, $Address, $PhoneNumber, $Account_type, $photoFilePath);
+    $stmt = $connections->prepare("INSERT INTO usertbl (Email, Password, FirstName, LastName, Gender, BirthDate, Address, PhoneNumber, Account_type, Photo, Joined) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssssiss", $Email, $hashedPassword, $FirstName, $LastName, $Gender, $BirthDate, $Address, $PhoneNumber, $Account_type, $photoFilePath, $current_time);
 
     if ($stmt->execute()) {
         $_SESSION['Email'] = $Email;
