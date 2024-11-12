@@ -6,6 +6,9 @@
         </div>
         <div class="new-password-form">
             <form action="../php/Staffs/changePassword.php" method="POST" id="passwordForm">
+            <input type="hidden" id="Name" name="Name" value="<?php echo htmlspecialchars($FirstName) . ' ' .  htmlspecialchars($LastName)?>">
+            <input type="hidden" id="assignedPhoto" name="assignedPhoto" value="<?php echo htmlspecialchars($Photo)?>">
+            <input type="hidden" id="Gender" name="Gender" value="<?php echo htmlspecialchars($Gender)?>">
             <div class="pass-form-group">
                     <h6>Current Password</h6>
                     <input type="password" id="currentPassword" name="currentPassword" required autocomplete="off" placeholder=" ">
@@ -39,6 +42,9 @@
             const confirmPassword = $("#confirmPassword").val();
             const messageDiv = $("#message");
             const current_page = $("#current_page").val();
+            const Name = $("#Name").val();
+            const assignedPhoto = $("#assignedPhoto").val();
+            const Gender = $("#Gender").val();
 
             messageDiv.empty();
 
@@ -51,7 +57,10 @@
                 currentPassword: currentPassword,
                 newPassword: newPassword,
                 confirmPassword: confirmPassword,
-                current_page:current_page,
+                current_page: current_page,
+                Name: Name,
+                assignedPhoto: assignedPhoto,
+                Gender: Gender
             };
 
             // AJAX request to change the password

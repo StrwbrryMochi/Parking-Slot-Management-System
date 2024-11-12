@@ -61,6 +61,8 @@
                                 <button type="submit" name="checkoutSlot"><i class="fa-solid fa-check"></i></button>
                             </div>
                     </div>
+                    <input type="hidden" name="Name" value="<?php echo htmlspecialchars($FirstName) . ' ' .  htmlspecialchars($LastName)?>">
+                    <input type="hidden" name="assignedPhoto" value="<?php echo htmlspecialchars($Photo)?>">
                     <input type="hidden" name="current_page" value="<?php echo htmlspecialchars($current_page); ?>">
                     <input type="hidden" id="hidden-license-plate-checkout" name="plate_number">
                     <input type="hidden" id="hidden-user-type" name="user_type">

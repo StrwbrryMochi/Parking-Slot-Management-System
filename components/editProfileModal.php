@@ -10,6 +10,8 @@
                     <span class="image-indicator">
                         <i class="fa-solid fa-camera"></i>
                     </span>
+                    <input type="hidden" name="Name" value="<?php echo htmlspecialchars($FirstName) . ' ' .  htmlspecialchars($LastName)?>">
+                    <input type="hidden" name="assignedPhoto" value="<?php echo htmlspecialchars($Photo)?>">
                 </label>
             </div>
             </div>

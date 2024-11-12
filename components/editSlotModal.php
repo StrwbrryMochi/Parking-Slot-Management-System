@@ -21,6 +21,8 @@
                             <div class="slot-data-header">Slot Location</div>
 
                             <div class="edit-slot-data">
+                                <input type="hidden" name="Name" value="<?php echo htmlspecialchars($FirstName) . ' ' .  htmlspecialchars($LastName)?>">
+                                <input type="hidden" name="assignedPhoto" value="<?php echo htmlspecialchars($Photo)?>">
                                 <input type="hidden" name="current_page" value="<?php echo htmlspecialchars($current_page); ?>">
                                 <input type="text" id="display-floor-edit" name="floor" readonly>
                                 <input type="text" id="display-zone-edit" name="zone" readonly>
@@ -87,8 +89,8 @@
                                     </label>
                             </div>
 
-                        <div class="plate-number">
-                            <input type="text" id="edit-plate-number" class="plate-input" name="plate_number" autocomplete="off" oninput="convertToUppercase()" placeholder=" " required>
+                        <div class="plate-number" id="last-input">
+                            <input type="text" id="edit-plate-number" class="plate-input" name="plate_number" autocomplete="off" onkeyup="convertToUppercase()" placeholder=" " required>
                             <label for="plateNumber">Edit Plate Number</label>
                         </div>
 
@@ -109,7 +111,7 @@
 
 <script>
     function convertToUppercase() {
-        var inputField = document.getElementById('plateNumber');
-        inputField.value = inputField.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        var inputFieldEdit = document.getElementById("edit-plate-number");
+        inputFieldEdit.value = inputFieldEdit.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
     }
 </script>
