@@ -24,7 +24,9 @@ CREATE TABLE usertbl (
     Address VARCHAR(255) NOT NULL,
     PhoneNumber VARCHAR(255) NOT NULL,
     Photo VARCHAR(255) NOT NULL,
-    Status ENUM('Online', 'Offline') DEFAULT 'Offline'
+    Status ENUM('Online', 'Offline') DEFAULT 'Offline',
+    Joined DATE NOT NULL,
+    Last_active DATE NOT NULL,
 );
 
 
