@@ -43,7 +43,7 @@ function fetchRevenue() {
             $revenueFetch[] = $row; // Collect all rows
         }
 
-        return json_encode($revenueFetch); // Convert data to JSON for JavaScript
+        return json_encode($revenueFetch); 
     } else {
         echo "Error: Database connection is closed.";
         return json_encode([]);
@@ -148,12 +148,12 @@ function slotAdd($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userT
             if ($logStmt = $connections->prepare($logSql)) {
                 $logStmt->bind_param("sssss", $slot, $Name, $assignedPhoto, $current_time, $addAction);
                 if ($logStmt->execute()) {
-                    $logStmt->close();  // Close the statement after execution
+                    $logStmt->close();
                 } else {
-                    echo "Error in audit log insertion: " . $logStmt->error;  // More specific error message
+                    echo "Error in audit log insertion: " . $logStmt->error; 
                 }
             } else {
-                echo "Error preparing audit log statement: " . $connections->error;  // If preparation fails
+                echo "Error preparing audit log statement: " . $connections->error;
             } 
 
             // Redirect to the appropriate page based on current page
@@ -246,7 +246,7 @@ function slotEdit($floor, $zone, $slot_number, $plateNumber, $vehicleType, $user
             if ($logStmt = $connections->prepare($logSql)) {
                 $logStmt->bind_param("sssss", $slot, $Name, $assignedPhoto, $current_time, $editAction);
                 if ($logStmt->execute()) {
-                    $logStmt->close();  // Close the statement after execution
+                    $logStmt->close();  
                 } else {
                     echo "Error in audit log insertion: " . $logStmt->error;  
                 }
