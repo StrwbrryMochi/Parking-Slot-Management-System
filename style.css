@@ -621,6 +621,22 @@ section.visible {
   color: #7070d3;
 }
 
+.table-row {
+  transform: scale(0.9);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.table-row.visible {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.table-row.not-visible {
+  transform: scale(0.9);
+  opacity: 0;
+}
+
 .filter-container {
   display: flex;
   flex-direction: column;
@@ -886,6 +902,18 @@ section.visible {
   color: rgb(21, 21, 71);
   border-color: rgb(83, 83, 156);
   background-color: rgb(151, 151, 253);
+}
+
+.slot.overstay {
+  color: rgb(71, 68, 21);
+  border-color: rgb(156, 151, 83);
+  background-color: rgb(251, 253, 151);
+}
+
+.unavailable {
+  color: rgb(71, 21, 21);
+  border-color: rgb(156, 83, 83);
+  background-color: rgb(253, 151, 151);
 }
 
 .row-box .slot {
@@ -1440,6 +1468,23 @@ footer {
 }
 
 .occupied input {
+  pointer-events: none;
+}
+
+.unavailable .radio-tile {
+  color: rgb(71, 21, 21);
+  border-color: rgb(156, 83, 83);
+  background-color: rgb(253, 151, 151);
+}
+
+.unavailable .radio-tile:hover {
+  color: rgb(71, 21, 21);
+  border-color: rgb(156, 83, 83);
+  background-color: rgb(253, 151, 151);
+  cursor: not-allowed;
+}
+
+.unavailable input {
   pointer-events: none;
 }
 
