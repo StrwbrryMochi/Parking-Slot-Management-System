@@ -13,6 +13,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         $newPassword = $_POST['newPassword'] ?? null;
         $confirmPassword = $_POST['confirmPassword'] ?? null;
         $current_page = $_POST['current_page'];
+        $Gender = $_POST['Gender'];
+        $Name = htmlspecialchars($_POST['Name']);
+        $assignedPhoto = htmlspecialchars($_POST['assignedPhoto']);
 
         if (!$currentPassword || !$newPassword || !$confirmPassword) {
             echo json_encode(['status' => 'error', 'message' => 'All fields are required.']);
@@ -60,6 +63,24 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
             // Execute the update statement and set the redirect URL in the response
             if ($updateStmt->execute()) {
+
+                // Add action to the audit log
+                date_default_timezone_set('Asia/Manila');
+                $current_time = date('Y-m-d H:i:s');
+                $pronoun = ($Gender == 'Male') ? "his" : "her";
+                $editAction = "has changed $pronoun password";
+                $logSql = "INSERT INTO audit_log  (Name, Photo, time, action) VALUES (?,?,?,?)";
+                if ($logStmt = $connections->prepare($logSql)) {
+                    $logStmt->bind_param("ssss", $Name, $assignedPhoto, $current_time, $editAction);
+                    if ($logStmt->execute()) {
+                        $logStmt->close(); 
+                    } else {
+                        echo "Error in audit log insertion: " . $logStmt->error;  
+                    }
+                } else {
+                    echo "Error preparing audit log statement: " . $connections->error;  
+                }
+
                 if ($current_page === 'StaffSlotManagement') {
                     $response = [
                         'status' => 'success',
