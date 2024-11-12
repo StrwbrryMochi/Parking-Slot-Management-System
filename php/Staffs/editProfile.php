@@ -26,6 +26,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $BirthDate = htmlspecialchars(trim($_POST['BirthDate']));
         $Address = htmlspecialchars(trim($_POST['Address']));
         $current_page = htmlspecialchars(trim($_POST['current_page']));
+        $Name = htmlspecialchars($_POST['Name']);
+        $assignedPhoto = htmlspecialchars($_POST['assignedPhoto']);
         
         $photoFilePath = $currentUser['Photo']; 
         $isChanged = false; 
@@ -112,6 +114,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($NewEmail !== $Email) {
                 $_SESSION['Email'] = $NewEmail;
             }
+
+             // Add action to the audit log
+             date_default_timezone_set('Asia/Manila');
+             $current_time = date('Y-m-d H:i:s');
+             $pronoun = ($Gender == 'Male') ? "his" : "her";
+             $editAction = "has edited $pronoun profile";
+             $logSql = "INSERT INTO audit_log  (Name, Photo, time, action) VALUES (?,?,?,?)";
+             if ($logStmt = $connections->prepare($logSql)) {
+                 $logStmt->bind_param("ssss", $Name, $assignedPhoto, $current_time, $editAction);
+                 if ($logStmt->execute()) {
+                     $logStmt->close(); 
+                 } else {
+                     echo "Error in audit log insertion: " . $logStmt->error;  
+                 }
+             } else {
+                 echo "Error preparing audit log statement: " . $connections->error;  
+             } 
             
             // Set the redirect URL in the response
             if ($current_page === 'StaffSlotManagement') {
