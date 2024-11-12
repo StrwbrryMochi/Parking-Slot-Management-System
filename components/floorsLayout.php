@@ -1,4 +1,5 @@
 <div class="slot-overview-header"></div>
+                
                 <div class="overview-container">
 
                 <div id="floor-1" class="floor active">
