@@ -75,8 +75,10 @@ function fetchArchive() {
 }
 
 //* To Assign a Slot
-function slotAdd($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userType, $current_page) {
+function slotAdd($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userType, $current_page, $Name, $assignedPhoto) {
     global $connections;
+
+    $slot = $floor . $zone . $slot_number;
 
     // Get the Slot ID based on the floor, zone, and slot number
     $slotidSql = "SELECT slot_id FROM parking_tbl WHERE floor = ? AND zone = ? AND slot_number = ?";
@@ -139,7 +141,22 @@ function slotAdd($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userT
     if ($stmt = $connections->prepare($updateSql)) {
         $stmt->bind_param("sssssiii", $plateNumber, $userType, $vehicleType, $current_time, $zone, $floor, $slot_number, $slot_id);
         if ($stmt->execute()) {
-            // Adjust redirection based on the current page
+
+            // Add action to the audit log
+            $addAction = "has assigned $plateNumber to Slot $slot";
+            $logSql = "INSERT INTO audit_log  (Slot, Name, Photo, time, action) VALUES (?,?,?,?,?)";
+            if ($logStmt = $connections->prepare($logSql)) {
+                $logStmt->bind_param("sssss", $slot, $Name, $assignedPhoto, $current_time, $addAction);
+                if ($logStmt->execute()) {
+                    $logStmt->close();  // Close the statement after execution
+                } else {
+                    echo "Error in audit log insertion: " . $logStmt->error;  // More specific error message
+                }
+            } else {
+                echo "Error preparing audit log statement: " . $connections->error;  // If preparation fails
+            } 
+
+            // Redirect to the appropriate page based on current page
             if ($current_page === 'StaffSlotManagement') {
                 echo "<script>window.location.href='../Staff/StaffSlotManagement.php?add_slot=true'</script>";
             } else {
@@ -158,8 +175,10 @@ function slotAdd($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userT
 }
 
 // To Edit A Slot
-function slotEdit($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userType, $current_page) {
+function slotEdit($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userType, $current_page, $Name, $assignedPhoto) {
     global $connections;
+
+    $slot = $floor . $zone . $slot_number;
 
     // Get The Slot_Id From the floor, zone, and slot_number
     $slotidSql = "SELECT slot_id FROM parking_tbl WHERE floor = ? AND zone = ? AND slot_number = ?";
@@ -187,7 +206,7 @@ function slotEdit($floor, $zone, $slot_number, $plateNumber, $vehicleType, $user
     // Check if the slot is occupied
     $checkSql = "SELECT status FROM parking_tbl WHERE slot_id = ?";
     if ($stmt = $connections->prepare($checkSql)) {
-        $stmt->bind_param("i", $slot_id); // Use slot_id, not slot_number
+        $stmt->bind_param("i", $slot_id);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -218,6 +237,23 @@ function slotEdit($floor, $zone, $slot_number, $plateNumber, $vehicleType, $user
     if ($stmt = $connections->prepare($updateSql)) {
         $stmt->bind_param("sssi", $vehicleType, $userType, $plateNumber, $slot_id); 
         if ($stmt->execute()) {
+
+            // Add action to the audit log
+            date_default_timezone_set('Asia/Manila');
+            $current_time = date('Y-m-d H:i:s');
+            $editAction = "has edited Slot $slot";
+            $logSql = "INSERT INTO audit_log  (Slot, Name, Photo, time, action) VALUES (?,?,?,?,?)";
+            if ($logStmt = $connections->prepare($logSql)) {
+                $logStmt->bind_param("sssss", $slot, $Name, $assignedPhoto, $current_time, $editAction);
+                if ($logStmt->execute()) {
+                    $logStmt->close();  // Close the statement after execution
+                } else {
+                    echo "Error in audit log insertion: " . $logStmt->error;  
+                }
+            } else {
+                echo "Error preparing audit log statement: " . $connections->error;  
+            } 
+
             // Adjust redirection based on the current page
             if ($current_page === 'StaffSlotManagement') {
                 echo "<script>window.location.href='../Staff/StaffSlotManagement.php?edit_slot=true'</script>";
@@ -238,8 +274,10 @@ function slotEdit($floor, $zone, $slot_number, $plateNumber, $vehicleType, $user
 }
 
 // To Checkout A Slot
-function slotCheckout($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userType, $status, $time_in, $time_out, $duration, $fee, $current_page) {
+function slotCheckout($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userType, $status, $time_in, $time_out, $duration, $fee, $current_page, $Name, $assignedPhoto) {
     global $connections;
+
+    $slot = $floor . $zone . $slot_number;
 
     // Get The Slot_Id From the floor, zone, and slot_number
     $slotidSql = "SELECT slot_id FROM parking_tbl WHERE floor = ? AND zone = ? AND slot_number = ?";
@@ -300,6 +338,22 @@ function slotCheckout($floor, $zone, $slot_number, $plateNumber, $vehicleType, $
         
         if ($stmt->execute()) {
             $stmt->close();
+
+            // Add action to the audit log
+            date_default_timezone_set('Asia/Manila');
+            $current_time = date('Y-m-d H:i:s');
+            $checkoutAction = "has finished processing Slot $slot";
+            $logSql = "INSERT INTO audit_log  (Slot, Name, Photo, time, action) VALUES (?,?,?,?,?)";
+            if ($logStmt = $connections->prepare($logSql)) {
+                $logStmt->bind_param("sssss", $slot, $Name, $assignedPhoto, $current_time, $checkoutAction);
+                if ($logStmt->execute()) {
+                    $logStmt->close(); 
+                } else {
+                    echo "Error in audit log insertion: " . $logStmt->error;  
+                }
+            } else {
+                echo "Error preparing audit log statement: " . $connections->error;  
+            } 
 
             // Archive the slot information
             $archiveSql = "INSERT INTO archive_tbl (slot_id, floor, zone, slot_number, plate_number, vehicle_type, user_type, status, time_in, time_out, duration, fee, payment_status)
