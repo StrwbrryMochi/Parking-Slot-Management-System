@@ -57,6 +57,8 @@ if (isset($_SESSION['Email'])) {
         // Set account role if staff
         if ($Account_type == 2) {
             $Account_role = "Staff";
+        } else if ($Account_type == 1) {
+            $Account_role = "Admin";
         }
 
         // Redirect if the user is not a staff member
