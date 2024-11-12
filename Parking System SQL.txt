@@ -64,6 +64,14 @@ CREATE TABLE archive_tbl (
     slot_number INT(11) NOT NULL
 );
 
+CREATE TABLE audit_log (
+    id BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    Slot VARCHAR(255) NOT NULL,
+    Name VARCHAR(255) NOT NULL,
+    Photo VARCHAR(255) NOT NULL,
+    time TIMESTAMP NULL DEFAULT NULL,
+    action VARCHAR(255) NOT NULL
+);
 
 // * Parking Slots Setup 
 INSERT INTO parking_tbl (slot_id, plate_number, user_type, vehicle_type, status, time_in, time_out, duration, fee, payment_status, floor, zone, slot_number) VALUES 
