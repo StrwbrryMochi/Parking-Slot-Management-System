@@ -128,10 +128,6 @@ document.addEventListener("DOMContentLoaded", function () {
       openModal(newPasswordOverlay, newPasswordContainer);
     });
 
-    newPasswordOverlay.addEventListener("click", function () {
-      closeModal(newPasswordOverlay, newPasswordContainer);
-    });
-
     closeNewPassButton.addEventListener("click", function () {
       closeModal(newPasswordOverlay, newPasswordContainer);
     });
