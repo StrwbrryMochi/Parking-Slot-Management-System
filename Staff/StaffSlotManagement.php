@@ -79,24 +79,34 @@ $current_page = 'StaffSlotManagement';
                 </thead>
                 <tbody>
                 <?php
+                    $current_time = time();
                     // Filter for occupied slots
                     $occupiedSlots = array_filter($fetchParking, function($parkingData) {
-                        return $parkingData['status'] === 'Occupied' && 'Overstay'; 
+                        return $parkingData['status'] === 'Occupied'; 
                     });
 
                     if (empty($occupiedSlots)) {
                         // If no occupied slots are available
-                        echo "<tr><td colspan='4'>No parking data available.</td></tr>";
+                        echo "<tr><td colspan='6'>No parking data available.</td></tr>";
                     } else {
                         // Display occupied slots
-                        foreach ($occupiedSlots as $parkingData): ?>
-                    <tr>
+                        foreach ($occupiedSlots as $parkingData):
+                            $time_in = strtotime($parkingData['time_in']); 
+                            $duration = ($current_time - $time_in) / (60 * 60);
+                    
+                            $status = $parkingData['status'];
+                            if ($duration > 8) {
+                                $status = 'Overstay'; 
+                            } 
+                ?>
+
+                    <tr class="table-row">
                         <td><?php echo htmlspecialchars($parkingData['floor']); ?></td>
                         <td><?php echo htmlspecialchars($parkingData['zone']); ?></td>
                         <td><?php echo htmlspecialchars($parkingData['slot_number']); ?></td>
                         <td><?php echo htmlspecialchars($parkingData['plate_number']); ?></td>
                         <td><?php echo htmlspecialchars($parkingData['vehicle_type']); ?></td>
-                        <td><?php echo htmlspecialchars($parkingData['status']); ?></td>
+                        <td><?php echo htmlspecialchars($status); ?></td>
                         <td>
                             <button
                             class="view-btn"
@@ -242,33 +252,127 @@ $current_page = 'StaffSlotManagement';
 <?php include '../components/editProfileModal.php'; ?>
 <?php include '../components/passwordModal.php'; ?>
 
-<script>
-    const urlParams = new URLSearchParams(window.location.search);
-if (
-  urlParams.has("add_slot") ||
-  urlParams.has("edit_slot") ||
-  urlParams.has("checkout_slot") ||
-  urlParams.has("user_edit") ||
-  urlParams.has("password_changed")
-) {
-  document.getElementById("loader-container").style.display = "none";
+    <script>
+        // Reset filter functionality
+        const ResetFilter = document.getElementById("resetFilter");
+        const searchFilter = document.getElementById('search');
+        const filterFloor = document.querySelectorAll("input[name='floors[]']");
+        const filterZone = document.querySelectorAll("input[name='zones[]']");
+        const filterVehicle = document.querySelectorAll("input[name='vehicle_types[]']");
 
-  // Disable the header immediately
-  document.querySelector("header").classList.add("disabled");
+        // Event listener for resetting the filters
+        ResetFilter.addEventListener('click', function() {
+            filterFloor.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
 
-  // Disable all elements with the class "cards"
-  document.querySelectorAll(".cards").forEach((card) => {
-    card.classList.add("disabled");
-  });
+            filterZone.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
 
-  // Disable other specified elements
-  document.querySelector(".reserved-list-container").classList.add("disabled");
-  document.querySelector(".sidebar").classList.add("disabled");
-  document.querySelector(".table-container").classList.add("disabled");
-  document.querySelector(".filter-container").classList.add("disabled");
-}
+            filterVehicle.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
 
-</script>
+            searchFilter.value = '';
+            resetTable();
+        });
+
+        // Function to reset the table data with an AJAX request
+        function resetTable() {
+            var searchQuery = '';
+
+            console.log('Sending AJAX request to reset table...');
+
+            $.ajax({
+                url: '../php/parkingExecute.php',
+                type: 'GET',
+                data: { 
+                    search: searchQuery, 
+                    floors: [],
+                    zones: [],
+                    vehicle_types: []
+                },
+                success: function(data) {
+                    console.log('AJAX request successful, updating table...');
+                    $('.parking-table tbody').html(data); 
+
+                    observeTableRows(); 
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', error);
+                }
+            });
+        }
+
+        // Function to observe table rows for visibility
+        function observeTableRows() {
+            document.querySelectorAll('.table-row').forEach(row => {
+                visibilityObserver.observe(row);
+            });
+        }
+
+        const visibilityObserver = new IntersectionObserver((observedEntries) => {
+            observedEntries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    entry.target.classList.remove('not-visible');
+                } else {
+                    entry.target.classList.add('not-visible');
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, {
+            threshold: 0.3
+        });
+        // Initialize observer for rows on page load
+        observeTableRows();
+
+        function getCheckedValues(checkboxes) {
+            return Array.from(checkboxes)
+                        .filter(checkbox => checkbox.checked)
+                        .map(checkbox => checkbox.value);
+        }
+
+        // Event listener for search input changes
+        searchFilter.addEventListener('input', applyFiltersAndSearch);
+
+        // Event listeners for filter changes
+        filterFloor.forEach(checkbox => checkbox.addEventListener('change', applyFiltersAndSearch));
+        filterZone.forEach(checkbox => checkbox.addEventListener('change', applyFiltersAndSearch));
+        filterVehicle.forEach(checkbox => checkbox.addEventListener('change', applyFiltersAndSearch));
+
+        observeTableRows();
+    </script>
+
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+    if (
+    urlParams.has("add_slot") ||
+    urlParams.has("edit_slot") ||
+    urlParams.has("checkout_slot") ||
+    urlParams.has("user_edit") ||
+    urlParams.has("password_changed")
+    ) {
+    document.getElementById("loader-container").style.display = "none";
+
+    // Disable the header immediately
+    document.querySelector("header").classList.add("disabled");
+
+    // Disable all elements with the class "cards"
+    document.querySelectorAll(".cards").forEach((card) => {
+        card.classList.add("disabled");
+    });
+
+    // Disable other specified elements
+    document.querySelector(".reserved-list-container").classList.add("disabled");
+    document.querySelector(".sidebar").classList.add("disabled");
+    document.querySelector(".table-container").classList.add("disabled");
+    document.querySelector(".filter-container").classList.add("disabled");
+    }
+
+    </script>
 
      <script>
       document.addEventListener("DOMContentLoaded", function() {
@@ -382,57 +486,6 @@ if (
     });
     </script>
 
-    <script>
-    const ResetFilter = document.getElementById("resetFilter");
-    const searchFilter = document.getElementById('search');
-    const filterFloor = document.querySelectorAll("input[name='floors[]']");
-    const filterZone = document.querySelectorAll("input[name='zones[]']");
-    const filterVehicle = document.querySelectorAll("input[name='vehicle_types[]']");
-
-    ResetFilter.addEventListener('click', function() {
-        filterFloor.forEach(function(checkbox) {
-            checkbox.checked = false;
-        });
-
-        filterZone.forEach(function(checkbox) {
-            checkbox.checked = false;
-        });
-
-        filterVehicle.forEach(function(checkbox) {
-            checkbox.checked = false;
-        });
-
-        searchFilter.value = '';
-        resetTable();
-    });
-
-    // Function to reset the table data
-    function resetTable() {
-        var searchQuery = '';
-
-        console.log('Sending AJAX request to reset table...');
-
-        $.ajax({
-            url: '../php/parkingExecute.php',
-            type: 'GET',
-            data: { 
-                search: searchQuery, 
-                floors: [],
-                zones: [],
-                vehicle_types: []
-            },
-            success: function(data) {
-                console.log('AJAX request successful, updating table...');
-                $('.parking-table tbody').html(data);
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', error);
-            }
-        });
-    }
-    </script>
-
-    
      <script src="../js/modal.js"></script>
      <script src="../js/loading.js"></script>
      <script src="../js/section.js"></script>
