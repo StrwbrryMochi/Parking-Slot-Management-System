@@ -85,118 +85,136 @@ $current_page = 'StaffSlotOverview';
     
     <!-- Functions -->
     <script>
-    const zones = ['A', 'B', 'C', 'D', 'E', 'F'];
-    const slotsPerZone = 10;
-    const floors = [1, 2, 3, 4, 5];
-    const parkingData = <?php echo json_encode($fetchParking); ?>; 
+        const zones = ['A', 'B', 'C', 'D', 'E', 'F'];
+        const slotsPerZone = 10;
+        const floors = [1, 2, 3, 4, 5];
+        const parkingData = <?php echo json_encode($fetchParking); ?>; 
 
-    // Loop through each floor
-    floors.forEach(floor => {
-        // Loop through each zone
-        zones.forEach(zone => {
-            const container = document.getElementById(`floor${floor}-zone${zone}-slots`);
-            let slotNumber = 1; 
+        // Get current time
+        const currentTime = new Date();
 
-            // Loop through parking data to find slots for the current floor and zone
-            parkingData.forEach(slot => {
-                if (slot.floor == floor && slot.zone == zone) {
-                    const button = document.createElement('button');
-                    button.className = 'slot';
-                    button.setAttribute('data-zone', zone);
-                    button.setAttribute('data-slot', slotNumber); 
-                    button.setAttribute('data-floor', floor);
-                    button.setAttribute('data-slot-id', slot.slot_id);
-                    button.setAttribute('data-license-plate', slot.plate_number);
-                    button.setAttribute('data-user-type', slot.user_type);
-                    button.setAttribute('data-vehicle-type', slot.vehicle_type);
-                    button.setAttribute('data-status', slot.status);
-                    button.setAttribute('data-time-in', slot.time_in);
-                    
-                    // Set the button's inner text to the slot number
-                    button.textContent = slotNumber;
+        // Loop through each floor
+        floors.forEach(floor => {
+            // Loop through each zone
+            zones.forEach(zone => {
+                const container = document.getElementById(`floor${floor}-zone${zone}-slots`);
+                let slotNumber = 1; 
 
-                    // Check if the status is "Occupied" and add the occupied class if truesoptoihgjd and if not, disable viewing the slot 
-                    if (slot.status === 'Occupied') {
-                        button.classList.add('occupied');
-                    } else {
-                        button.setAttribute('disabled', 'disabled');
-                        button.style.pointerEvents = 'none';
+                // Loop through parking data to find slots for the current floor and zone
+                parkingData.forEach(slot => {
+                    if (slot.floor == floor && slot.zone == zone) {
+                        const button = document.createElement('button');
+                        button.className = 'slot';
+                        button.setAttribute('data-zone', zone);
+                        button.setAttribute('data-slot', slotNumber); 
+                        button.setAttribute('data-floor', floor);
+                        button.setAttribute('data-slot-id', slot.slot_id);
+                        button.setAttribute('data-license-plate', slot.plate_number);
+                        button.setAttribute('data-user-type', slot.user_type);
+                        button.setAttribute('data-vehicle-type', slot.vehicle_type);
+                        button.setAttribute('data-status', slot.status);
+                        button.setAttribute('data-time-in', slot.time_in);
+                        
+                        // Set the button's inner text to the slot number
+                        button.textContent = slotNumber;
+
+                        // Check if slot status is occupied
+                        if (slot.status === 'Occupied') {
+                            button.classList.add('occupied');
+
+                            // Calculate time difference
+                            const timeIn = new Date(slot.time_in);
+                            const duration = (currentTime - timeIn) / (1000 * 60 * 60);
+
+                            if (duration > 8) {
+                                button.classList.add('overstay');
+                            }
+                        } else {
+                            button.setAttribute('disabled', 'disabled');
+                            button.style.pointerEvents = 'none';
+                        }
+
+                        if (slot.status === 'Unavailable') {
+                            button.classList.add('unavailable');
+                            button.setAttribute('disabled', 'disabled');
+                            button.style.pointerEvents = 'none';
+                        }
+
+                        button.addEventListener('click', function () {
+                            const selectedZone = this.getAttribute('data-zone');
+                            const selectedSlot = this.getAttribute('data-slot');
+                            const selectedFloor = this.getAttribute('data-floor');
+                            const licensePlate = this.getAttribute('data-license-plate');
+                            const userType = this.getAttribute('data-user-type');
+                            const vehicleType = this.getAttribute('data-vehicle-type');
+                            const status = this.getAttribute('data-status');
+                            const timeIn = this.getAttribute('data-time-in');
+
+                            // Update the Bootstrap modal with the slot's information
+                            document.getElementById('modal-floor').textContent = `${selectedFloor}`;
+                            document.getElementById('modal-zone').textContent = `${selectedZone}`;
+                            document.getElementById('modal-slot').textContent = `${selectedSlot}`;
+                            document.getElementById('modal-license-plate').textContent = `${licensePlate}`;
+                            document.getElementById('modal-user-type').textContent = `${userType}`;
+                            document.getElementById('modal-vehicle-type').textContent = `${vehicleType}`;
+                            document.getElementById('modal-status').textContent = `${status}`;
+
+                            document.getElementById('hidden-time-in').value = timeIn;
+
+                            // Handle time_in: if it's 'null', empty, or invalid, hide the field
+                            const modalTimeIn = document.getElementById('modal-time-in');
+                            const modalTimeInField = document.getElementById('modal-time-in-field');
+
+                            if (timeIn && timeIn !== 'null' && timeIn.trim() !== '') {
+                                const date = new Date(timeIn);
+                                const formattedDate = date.toLocaleString('en-US', { 
+                                    year: 'numeric', 
+                                    month: '2-digit', 
+                                    day: '2-digit', 
+                                    hour: '2-digit', 
+                                    minute: '2-digit', 
+                                    hour12: true 
+                                });
+                                modalTimeIn.textContent = formattedDate;
+                                modalTimeInField.style.display = 'block'; 
+                            } else {
+                                modalTimeInField.style.display = 'none'; 
+                            }
+
+                            // Display vehicle type Image
+                            const vehicleImageContainer = document.querySelector('.view-vehicle-type');
+                            vehicleImageContainer.innerHTML = ''; 
+
+                            let imgSrc = '';
+
+                            // Match vehicle type and set corresponding image
+                            if (vehicleType === 'Car') {
+                                imgSrc = '../img/Cars.svg';
+                            } else if (vehicleType === 'Motorcycle') {
+                                imgSrc = '../img/Moto.svg';
+                            } else if (vehicleType === 'Bicycle') {
+                                imgSrc = '../img/Bikes.svg';
+                            } else {
+                                imgSrc = '../img/Parking.svg'; 
+                            }
+
+                            const vehicleImg = document.createElement('img');
+                            vehicleImg.src = imgSrc;
+                            vehicleImg.alt = vehicleType;
+                            vehicleImageContainer.appendChild(vehicleImg);
+
+                            const modal = new bootstrap.Modal(document.getElementById('slotModal'));
+                            modal.show();
+                        });
+
+                        container.appendChild(button);
+                        slotNumber++; 
                     }
-
-                    button.addEventListener('click', function () {
-                        const selectedZone = this.getAttribute('data-zone');
-                        const selectedSlot = this.getAttribute('data-slot');
-                        const selectedFloor = this.getAttribute('data-floor');
-                        const licensePlate = this.getAttribute('data-license-plate');
-                        const userType = this.getAttribute('data-user-type');
-                        const vehicleType = this.getAttribute('data-vehicle-type');
-                        const status = this.getAttribute('data-status');
-                        const timeIn = this.getAttribute('data-time-in');
-
-                        // Update the Bootstrap modal with the slot's information
-                        document.getElementById('modal-floor').textContent = `${selectedFloor}`;
-                        document.getElementById('modal-zone').textContent = `${selectedZone}`;
-                        document.getElementById('modal-slot').textContent = `${selectedSlot}`;
-                        document.getElementById('modal-license-plate').textContent = `${licensePlate}`;
-                        document.getElementById('modal-user-type').textContent = `${userType}`;
-                        document.getElementById('modal-vehicle-type').textContent = `${vehicleType}`;
-                        document.getElementById('modal-status').textContent = `${status}`;
-
-                        document.getElementById('hidden-time-in').value = timeIn;
-
-                        // Handle time_in: if it's 'null', empty, or invalid, hide the field
-                        const modalTimeIn = document.getElementById('modal-time-in');
-                        const modalTimeInField = document.getElementById('modal-time-in-field');
-
-                        if (timeIn && timeIn !== 'null' && timeIn.trim() !== '') {
-                            const date = new Date(timeIn);
-                            const formattedDate = date.toLocaleString('en-US', { 
-                                year: 'numeric', 
-                                month: '2-digit', 
-                                day: '2-digit', 
-                                hour: '2-digit', 
-                                minute: '2-digit', 
-                                hour12: true 
-                            });
-                            modalTimeIn.textContent = formattedDate;
-                            modalTimeInField.style.display = 'block'; 
-                        } else {
-                            modalTimeInField.style.display = 'none'; 
-                        }
-
-                        // Display vehicle type Image
-                        const vehicleImageContainer = document.querySelector('.view-vehicle-type');
-                        vehicleImageContainer.innerHTML = ''; 
-
-                        let imgSrc = '';
-
-                        // Match vehicle type and set corresponding image
-                        if (vehicleType === 'Car') {
-                            imgSrc = '../img/Cars.svg';
-                        } else if (vehicleType === 'Motorcycle') {
-                            imgSrc = '../img/Moto.svg';
-                        } else if (vehicleType === 'Bicycle') {
-                            imgSrc = '../img/Bikes.svg';
-                        } else {
-                            imgSrc = '../img/Parking.svg'; 
-                        }
-
-                        const vehicleImg = document.createElement('img');
-                        vehicleImg.src = imgSrc;
-                        vehicleImg.alt = vehicleType;
-                        vehicleImageContainer.appendChild(vehicleImg);
-
-                        const modal = new bootstrap.Modal(document.getElementById('slotModal'));
-                        modal.show();
-                    });
-
-                    container.appendChild(button);
-                    slotNumber++; 
-                }
+                });
             });
         });
-    });
     </script>
+
 
     <script>
       document.addEventListener("DOMContentLoaded", function() {
