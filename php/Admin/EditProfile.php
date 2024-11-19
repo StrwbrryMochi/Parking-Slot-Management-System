@@ -144,12 +144,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     'status' => 'success',
                     'message' => 'Profile updated successfully!',
                     'redirect' => '../Admin/SlotManagement.php?profile_edit=true'
-                ]; 
+                ];
+            }   else if ($current_page === 'UserManagement') {
+                    $response = [
+                        'status' => 'success',
+                        'message' => 'Profile updated successfully!',
+                        'redirect' => '../Admin/UserManagement.php?profile_edit=true'
+                    ]; 
             } else {
                 $response = [
                     'status' => 'success',
                     'message' => 'Profile updated successfully!',
-                    'redirect' => '../Admin/UserManagement.php?profile_edit=true'
+                    'redirect' => '../Admin/Archive.php?profile_edit=true'
                 ]; 
             }
         } else {
