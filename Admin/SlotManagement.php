@@ -56,6 +56,12 @@
                         <span class="link-text">User Management</span>
                 </a>
                 </li>
+                <li>
+                <a class="links" href="Archive.php">
+                        <i class='bx bx-archive' ></i>
+                        <span class="link-text">Archive Management</span>
+                </a>
+                </li>
             </ul>
         </div>
 
@@ -113,6 +119,8 @@
     <?php include '../components/Admin/EditProfile.php'; ?>
     <?php include '../components/Admin/ProfileModal.php'; ?>
     <?php include '../components/Admin/PasswordModal.php'; ?>
+    <?php include '../components/Admin/ViewSlot.php'; ?>
+    <?php include '../components/Admin/EditSlot.php'; ?>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -174,6 +182,10 @@
 
                         if (slot.status === 'Unavailable') {
                             button.classList.add("unavailable");
+                        }
+
+                        if (slot.status === 'Reserved') {
+                            button.classList.add("reserved")
                         }
                         
                         button.addEventListener('click', function () {

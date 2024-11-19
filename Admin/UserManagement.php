@@ -56,6 +56,12 @@
                         <span class="link-text">User Management</span>
                 </a>
                 </li>
+                <li>
+                <a class="links" href="Archive.php">
+                        <i class='bx bx-archive' ></i>
+                        <span class="link-text">Archive Management</span>
+                </a>
+                </li>
             </ul>
         </div>
 
@@ -296,13 +302,7 @@
         const Joined = new Date($(icon).data('joined'));
         const Lastactive = new Date ($(icon).data('lastactive'));
 
-        if (accountType == 1) {
-            deleteUser.style.display = "none";
-        } else if (accountType == 2) {
-            deleteUser.style.display = "flex";
-        } else {
-            deleteUser.style.display = "block";
-        }
+
 
         const isNearBottom = (iconRect.bottom + 100) > window.innerHeight;
         optionContainer.style.left = `${iconRect.right + offsetX + 10}px`;
@@ -310,7 +310,7 @@
         if (accountType === 2 && !isNearBottom) {
             optionContainer.style.top = `${iconRect.top + offsetY - 65}px`;
         } else if (accountType === 1 && !isNearBottom) {
-            optionContainer.style.top = `${iconRect.top + offsetY - 18}px`;
+            optionContainer.style.top = `${iconRect.top + offsetY - 65}px`;
         } else {
             optionContainer.style.top = `${iconRect.top + offsetY + (isNearBottom ? -65 : -18)}px`;
         }
@@ -364,6 +364,18 @@
         }
 
         deleteButton.setAttribute("data-id", userID);
+        deleteButton.setAttribute("data-firstname", FirstName);
+        deleteButton.setAttribute("data-lastname", LastName);
+        deleteButton.setAttribute("data-email", Email);
+        deleteButton.setAttribute("data-gender", Gender);
+        deleteButton.setAttribute("data-birthdate", BirthDate);
+        deleteButton.setAttribute("data-address", Address);
+        deleteButton.setAttribute("data-phonenumber", PhoneNumber);
+        deleteButton.setAttribute("data-accounttype", accountType);
+        deleteButton.setAttribute("data-photo", Photo);
+        deleteButton.setAttribute("data-status", Status);
+        deleteButton.setAttribute("data-joined", Joined);
+        deleteButton.setAttribute("data-lastactive", Lastactive);
 
         document.getElementById("span-firstname").textContent = FirstName;
         document.getElementById("span-lastname").textContent = LastName;
@@ -402,6 +414,34 @@
 
     function confirmDelete(button) {
         const userID = button.getAttribute('data-id'); 
+        const FirstName = button.getAttribute('data-firstname');
+        const LastName = button.getAttribute('data-lastname');
+        const Email = button.getAttribute('data-email');
+        const Gender = button.getAttribute('data-gender');
+        const BirthDate = button.getAttribute('data-birthdate');
+        const Address = button.getAttribute('data-address');
+        const PhoneNumber = button.getAttribute('data-phonenumber');
+        const accountType = button.getAttribute('data-accounttype');
+        const Photo = button.getAttribute('data-photo');
+        const Status = button.getAttribute('data-status'); 
+        const Joined = button.getAttribute('data-joined');
+        const Lastactive = button.getAttribute('data-lastactive');
+
+        const queryParams = new URLSearchParams({
+            deleteStaff: userID,
+            firstname: FirstName,
+            lastname: LastName,
+            email: Email,
+            gender: Gender,
+            birthdate: BirthDate,
+            address: Address,
+            phonenumber: PhoneNumber,
+            accounttype: accountType,
+            photo: Photo,
+            status: Status,
+            joined: Joined,
+            lastactive: Lastactive
+        });
 
         if (userID) {
             console.log("User ID:", userID);
@@ -423,7 +463,7 @@
             }
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "../php/Admin/deleteUser.php?deleteStaff=" + userID;
+                window.location.href = "../php/Admin/deleteUser.php?" + queryParams.toString();
             }
         });
     }
