@@ -82,7 +82,7 @@ $current_page = 'StaffSlotManagement';
                     $current_time = time();
                     // Filter for occupied slots
                     $occupiedSlots = array_filter($fetchParking, function($parkingData) {
-                        return $parkingData['status'] === 'Occupied'; 
+                        return $parkingData['status'] === 'Occupied' || $parkingData['status'] === 'Reserved'; 
                     });
 
                     if (empty($occupiedSlots)) {
@@ -230,7 +230,6 @@ $current_page = 'StaffSlotManagement';
         <div class="footer">
             <button id="staffSlotManagement"><i class="fa-solid fa-house"></i></button>
             <button id="staffSlotOverview"><i class="fa-solid fa-car"></i></button>
-            <button><i class="fa-solid fa-circle-info"></i></button>
             <button id="snippetButton"><i class="fa-solid fa-user"></i></button>
         </div>
     </footer>
