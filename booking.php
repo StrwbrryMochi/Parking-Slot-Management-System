@@ -30,7 +30,7 @@ include 'php/parkingFunction.php';
     <!-- Navigation Bar -->
     <div class="navbar-wrapper">
       <div class="navbar">
-        <a href="#Home">
+        <a href="landing.php#Home">
           <img src="img/Landing/logoo.png" alt="" class="logo">
         </a>
         <ul>
