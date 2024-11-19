@@ -137,9 +137,9 @@ function slotAdd($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userT
     $current_time = date('Y-m-d H:i:s');
 
     // Update the status of the existing slot with formatted time_in and hardcoded payment_status to "Pending"
-    $updateSql = "UPDATE parking_tbl SET plate_number = ?, user_type = ?, vehicle_type = ?, status = 'Occupied', time_in = ?, payment_status = 'Pending', zone = ?, floor = ?, slot_number = ? WHERE slot_id = ?";
+    $updateSql = "UPDATE parking_tbl SET plate_number = ?, user_type = ?, vehicle_type = ?, status = 'Occupied', time_in = ?, payment_status = 'Pending', assignedBy = ?, assignedPhoto = ?, zone = ?, floor = ?, slot_number = ? WHERE slot_id = ?";
     if ($stmt = $connections->prepare($updateSql)) {
-        $stmt->bind_param("sssssiii", $plateNumber, $userType, $vehicleType, $current_time, $zone, $floor, $slot_number, $slot_id);
+        $stmt->bind_param("sssssssiii", $plateNumber, $userType, $vehicleType, $current_time,$Name, $assignedPhoto, $zone, $floor, $slot_number, $slot_id);
         if ($stmt->execute()) {
 
             // Add action to the audit log
@@ -218,7 +218,7 @@ function slotEdit($floor, $zone, $slot_number, $plateNumber, $vehicleType, $user
         }
 
         $row = $result->fetch_assoc();
-        if ($row['status'] != 'Occupied') {
+        if ($row['status'] != 'Occupied' && $row['status'] != 'Reserved') {
             echo "Error: Slot is still Available!";
             $stmt->close();
             $connections->close();
@@ -233,9 +233,9 @@ function slotEdit($floor, $zone, $slot_number, $plateNumber, $vehicleType, $user
     }
 
     // Update the slot with vehicle and user details
-    $updateSql = "UPDATE parking_tbl SET vehicle_type = ?, user_type = ?, plate_number = ? WHERE slot_id = ?";
+    $updateSql = "UPDATE parking_tbl SET vehicle_type = ?, user_type = ?, plate_number = ?, assignedBy = ?, assignedPhoto = ? WHERE slot_id = ?";
     if ($stmt = $connections->prepare($updateSql)) {
-        $stmt->bind_param("sssi", $vehicleType, $userType, $plateNumber, $slot_id); 
+        $stmt->bind_param("sssssi", $vehicleType, $userType, $plateNumber, $Name, $assignedPhoto, $slot_id); 
         if ($stmt->execute()) {
 
             // Add action to the audit log
@@ -272,6 +272,85 @@ function slotEdit($floor, $zone, $slot_number, $plateNumber, $vehicleType, $user
     exit();
 
 }
+
+function slotReserve($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userType, $reserveEmail, $reservePhone) {
+    global $connections;
+
+    // Get the Slot ID based on the floor, zone, and slot number
+    $slotidSql = "SELECT slot_id FROM parking_tbl WHERE floor = ? AND zone = ? AND slot_number = ?";
+    if ($stmt = $connections->prepare($slotidSql)) {
+        $stmt->bind_param("isi", $floor, $zone, $slot_number);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows == 0) {
+            echo "Error: Slot not Found";
+            $stmt->close();
+            $connections->close();
+            exit();
+        }
+
+        $row = $result->fetch_assoc();
+        $slot_id = $row['slot_id'];
+        $stmt->close(); 
+    } else {
+        echo "Error: " . $connections->error;
+        $connections->close();
+        exit();
+    }
+
+    // Check if the slot_id exists and is available
+    $checkSql = "SELECT status FROM parking_tbl WHERE slot_id = ?";
+    if ($stmt = $connections->prepare($checkSql)) {
+        $stmt->bind_param("i", $slot_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows == 0) {
+            echo "Error: Slot not Found";
+            $stmt->close();
+            $connections->close();
+            exit();
+        }
+
+        $row = $result->fetch_assoc();
+        if ($row['status'] != 'Available') {
+            echo "Error: Slot is not available";
+            $stmt->close();
+            $connections->close();
+            exit();
+        }
+
+        $stmt->close(); 
+    } else {
+        echo "Error: " . $connections->error;
+        $connections->close();
+        exit();
+    }
+
+    // Set timezone and get the current time
+    date_default_timezone_set('Asia/Manila');
+    $current_time = date('Y-m-d H:i:s');
+
+    // Update the status of the existing slot with formatted time_in and hardcoded payment_status to "Pending"
+    $updateSql = "UPDATE parking_tbl SET plate_number = ?, user_type = ?, vehicle_type = ?, status = 'Reserved', time_in = ?, payment_status = 'Pending', Email = ?, Phone_number = ?, zone = ?, floor = ?, slot_number = ? WHERE slot_id = ?";
+    if ($stmt = $connections->prepare($updateSql)) {
+        $stmt->bind_param("sssssssiii", $plateNumber, $userType, $vehicleType, $current_time, $reserveEmail, $reservePhone, $zone, $floor, $slot_number, $slot_id);
+        if ($stmt->execute()) {
+                echo "<script>window.location.href='../landing.php?slot_reserved=true'</script>";
+
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+        $stmt->close();
+    } else {
+        echo "Error: " . $connections->error;
+    }
+
+    $connections->close();
+    exit();
+}
+
 
 // To Checkout A Slot
 function slotCheckout($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userType, $status, $time_in, $time_out, $duration, $fee, $current_page, $Name, $assignedPhoto) {
@@ -317,7 +396,7 @@ function slotCheckout($floor, $zone, $slot_number, $plateNumber, $vehicleType, $
         }
 
         $row = $result->fetch_assoc();
-        if ($row['status'] != 'Occupied') {
+        if ($row['status'] != 'Occupied' && $row['status'] != 'Reserved') {
             echo "Error: Slot is still Available!";
             $stmt->close();
             $connections->close();
@@ -332,9 +411,9 @@ function slotCheckout($floor, $zone, $slot_number, $plateNumber, $vehicleType, $
     }
 
     // Update the parking table
-    $checkoutSql = "UPDATE parking_tbl SET fee = ?, duration = ?, time_out = ?, time_in = ?, status = ?, user_type = ?, vehicle_type = ?, plate_number = ?, zone = ?, slot_number = ?, floor = ? WHERE slot_id = ?";
+    $checkoutSql = "UPDATE parking_tbl SET fee = ?, duration = ?, time_out = ?, time_in = ?, status = ?, user_type = ?, vehicle_type = ?, plate_number = ?, assignedBy = ?, assignedPhoto = ?, zone = ?, slot_number = ?, floor = ? WHERE slot_id = ?";
     if ($stmt = $connections->prepare($checkoutSql)) {
-        $stmt->bind_param("issssssssiii", $fee, $duration, $time_out, $time_in, $status, $userType, $vehicleType, $plateNumber, $zone, $slot_number, $floor, $slot_id);
+        $stmt->bind_param("issssssssssiii", $fee, $duration, $time_out, $time_in, $status, $userType, $vehicleType, $plateNumber, $Name, $assignedPhoto, $zone, $slot_number, $floor, $slot_id);
         
         if ($stmt->execute()) {
             $stmt->close();
@@ -356,8 +435,8 @@ function slotCheckout($floor, $zone, $slot_number, $plateNumber, $vehicleType, $
             } 
 
             // Archive the slot information
-            $archiveSql = "INSERT INTO archive_tbl (slot_id, floor, zone, slot_number, plate_number, vehicle_type, user_type, status, time_in, time_out, duration, fee, payment_status)
-                           SELECT slot_id, floor, zone, slot_number, plate_number, vehicle_type, user_type, status, time_in, time_out, duration, fee, 'Paid'
+            $archiveSql = "INSERT INTO archive_tbl (slot_id, floor, zone, slot_number, plate_number, vehicle_type, user_type, status, time_in, time_out, duration, fee, payment_status, email, phone_number, assignedBy, assignedPhoto)
+                           SELECT slot_id, floor, zone, slot_number, plate_number, vehicle_type, user_type, status, time_in, time_out, duration, fee, 'Paid', email, phone_number, assignedBy, assignedPhoto
                            FROM parking_tbl
                            WHERE slot_id = ?";        
             if ($stmt = $connections->prepare($archiveSql)) {
@@ -407,7 +486,8 @@ function searchSlot($search = '', $selectedFloors = [], $selectedZones = [], $se
     $search = mysqli_real_escape_string($connections, $search);
 
     $filterSql = "SELECT * FROM parking_tbl
-                  WHERE status = 'Occupied' AND plate_number LIKE '%$search%'";
+              WHERE (status = 'Occupied' OR status = 'Reserved') 
+              AND plate_number LIKE '%$search%'";
 
     if (!empty($selectedFloors)) {
         $floors = implode(",", array_map('intval', $selectedFloors)); 

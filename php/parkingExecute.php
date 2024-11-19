@@ -73,6 +73,24 @@
                 echo "Error: Missing or invalid data.";
             }
         }
+
+        if (isset($_POST['reserveSlot'])) {
+            $floor = $_POST['floor'];
+            $zone = $_POST['zone'];
+            $slot_number = $_POST['slot_number'];
+            $plateNumber = $_POST['plate_number'];
+            $vehicleType = $_POST['vehicle_type'];
+            $userType = $_POST['user_type'];
+            $reserveEmail = $_POST['email'];
+            $reservePhone = $_POST['phone_number'];
+
+            if ($floor !== null && $zone !== null && $slot_number !== null && $plateNumber !== null && $vehicleType !== null && $userType !== null &&  $reserveEmail != null && $reservePhone != null) {
+                // Call Function To Add A Slot
+                slotReserve($floor, $zone, $slot_number, $plateNumber, $vehicleType, $userType, $reserveEmail, $reservePhone);
+            } else {
+                echo "Error: Missing or invalid data.";
+            }
+        }
     }
 
     // GET METHOD
@@ -84,7 +102,7 @@
     
         // Filter for occupied slots by plate number
         $occupiedSlots = searchSlot($search, $selectedFloors, $selectedZones, $selectedVehicleTypes);
-    
+        
         $current_time = time();
         if (empty($occupiedSlots)) {
             echo "<tr><td colspan='6'>No parking data available for this plate number.</td></tr>";
