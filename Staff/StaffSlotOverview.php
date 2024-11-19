@@ -65,7 +65,6 @@ $current_page = 'StaffSlotOverview';
                 <div class="footer">
                     <button id="staffSlotManagement"><i class="fa-solid fa-house"></i></button>
                     <button id="staffSlotOverview"><i class="fa-solid fa-car"></i></button>
-                    <button><i class="fa-solid fa-circle-info"></i></button>
                     <button id="snippetButton"><i class="fa-solid fa-user"></i></button>
                 </div>
                 </footer>
@@ -119,6 +118,7 @@ $current_page = 'StaffSlotOverview';
                         button.textContent = slotNumber;
 
                         // Check if slot status is occupied
+
                         if (slot.status === 'Occupied') {
                             button.classList.add('occupied');
 
@@ -138,6 +138,12 @@ $current_page = 'StaffSlotOverview';
                             button.classList.add('unavailable');
                             button.setAttribute('disabled', 'disabled');
                             button.style.pointerEvents = 'none';
+                        }
+
+                        if (slot.status === 'Reserved') {
+                            button.classList.add("reserved");
+                            button.removeAttribute('disabled', 'disabled');
+                            button.style.pointerEvents = 'auto';
                         }
 
                         button.addEventListener('click', function () {
