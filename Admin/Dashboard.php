@@ -58,6 +58,12 @@
                         <span class="link-text">User Management</span>
                 </a>
                 </li>
+                <li>
+                <a class="links" href="Archive.php">
+                        <i class='bx bx-archive' ></i>
+                        <span class="link-text">Archive Management</span>
+                </a>
+                </li>
             </ul>
         </div>
 
@@ -78,9 +84,11 @@
             
             if ($slot['status'] === 'Available') {
                 $availableSlots++;
-            } elseif ($slot['status'] === 'Occupied') {
+            } elseif ($slot['status'] === 'Occupied' || $slot['status'] === 'Reserved') {
                 $occupiedSlots++;
-            } elseif ($slot['status'] === 'Reserved') {
+            } 
+            
+            if ($slot['status'] === 'Reserved') {
                 $reservedSlots++;
             }
         }
