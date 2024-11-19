@@ -16,6 +16,8 @@
             $parkingSlots = fetchParking();
             $occupiedSlots = [];
             $unavailableSlots = [];
+            $reservedSlots = [];
+            
             foreach ($parkingSlots as $slot) {
                 if ($slot['status'] === 'Occupied') {
                     $occupiedSlots[] = [
@@ -24,9 +26,18 @@
                         'slot_number' => $slot['slot_number']
                     ];
                 }
-
+            
                 if ($slot['status'] === 'Unavailable') {
                     $unavailableSlots[] = [
+                        'floor' => $slot['floor'],
+                        'zone' => $slot['zone'],
+                        'slot_number' => $slot['slot_number']
+                    ];
+                }
+            
+                // Ensure Reserved slots are also categorized
+                if ($slot['status'] === 'Reserved') {
+                    $reservedSlots[] = [
                         'floor' => $slot['floor'],
                         'zone' => $slot['zone'],
                         'slot_number' => $slot['slot_number']
@@ -215,6 +226,7 @@
 <script>
  const occupiedSlots = <?php echo json_encode($occupiedSlots); ?>;
  const unavailableSlots = <?php echo json_encode($unavailableSlots); ?>;
+ const reservedSlots = <?php echo json_encode($reservedSlots); ?>;
 
 let selectedFloor = null;
 let selectedZone = null;
@@ -241,13 +253,14 @@ function updateSlots() {
     // Reset all slots first (remove the occupied and unavailable classes and re-enable all slots)
     document.querySelectorAll('.slot-group input').forEach(slotInput => {
         const label = slotInput.parentElement;
-        label.classList.remove('occupied', 'unavailable');
+        label.classList.remove('occupied', 'unavailable', 'reserved');
         slotInput.disabled = false;
     });
 
     // Apply classes for occupied and unavailable slots
     applySlotStatus(occupiedSlots, 'occupied');
     applySlotStatus(unavailableSlots, 'unavailable');
+    applySlotStatus(reservedSlots, 'reserved');
 }
 
 // Listen for floor and zone selection changes
@@ -288,8 +301,8 @@ function toggleVehicleType() {
             carInput.setAttribute('disabled', 'disabled'); 
             console.log('Motorcycle input enabled; Bike and Car inputs disabled for floor 1');
         } else if (selectedZone === 'E' || selectedZone === 'F') {
-            motorcycleInput.setAttribute('disabled', 'disabled'); 
-            bikeInput.removeAttribute('disabled'); 
+            bikeInput.setAttribute('disabled', 'disabled'); 
+            motorcycleInput.removeAttribute('disabled'); 
             carInput.setAttribute('disabled', 'disabled');
             console.log('Bike input enabled; Motorcycle and Car inputs disabled for floor 1');
         }
@@ -306,7 +319,7 @@ function toggleVehicleType() {
             if (bikeInput.checked) bikeInput.checked = false;
             if (carInput.checked) carInput.checked = false;
         } else if (selectedZone === 'E' || selectedZone === 'F') {
-            if (motorcycleInput.checked) motorcycleInput.checked = false;
+            if (bikeInput.checked) motorcycleInput.checked = false;
             if (carInput.checked) carInput.checked = false; 
         }
     } else if (['2', '3', '4', '5'].includes(selectedFloor)) {
