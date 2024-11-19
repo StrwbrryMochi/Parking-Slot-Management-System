@@ -48,3 +48,27 @@ function fetchLogs() {
         return [];
     }
 }
+
+function fetchUserArchives() {
+    global $connections;
+
+    if ($connections->ping()) {
+        $sql = "SELECT * FROM user_archive";
+        $result = mysqli_query($connections, $sql);
+
+        if (!$result) {
+            echo "Error executing query: " . $connections->error;
+            return [];
+        }
+
+        $userArchiveFetch = [];
+        while($row = mysqli_fetch_assoc($result)) {
+            $userArchiveFetch[] = $row;
+        }
+
+        return $userArchiveFetch;
+    } else {
+        echo "Error: Database connection is closed";
+        return [];
+    }
+}
