@@ -232,7 +232,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     //* Function to Validate Formats
 // Function to validate email format
 function isValidEmail(email) {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const regex = /^[a-zA-Z0-9._%+-]+@(gmail|yahoo|outlook|hotmail|icloud|aol|protonmail)\.(com|org|net|gov|edu|info|co|io|me)$/i;
     return regex.test(email);
 }
 
