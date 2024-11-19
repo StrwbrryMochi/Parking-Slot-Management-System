@@ -150,15 +150,27 @@ function manageVehicleTypeSelection() {
     }
 }
 
+function manageUserTypeSelection() {
+    const GuestInput = document.getElementById("GuestId");
+    const ReserveeInput = document.getElementById("ReserveeId");
+
+    // Reset all user type inputs to enabled
+    GuestInput.removeAttribute('disabled');
+    ReserveeInput.removeAttribute('disabled');
+
+    // Disable inputs based on the detected user type
+    if (userType === "Guest") {
+      ReserveeInput.setAttribute('disabled', 'disabled');
+      GuestInput.checked = true; 
+    } else if (userType === "Reservee") {
+      GuestInput.setAttribute('disabled', 'disabled'); 
+      ReserveeInput.checked = true; 
+    }
+  }
+
 // Call the function to initialize the input states based on the current vehicle type
 manageVehicleTypeSelection();
-
-  const userTypeRadio = document.getElementsByName("user_type");
-    userTypeRadio.forEach(radio => {
-      if (radio.value === userType) {
-        radio.checked = true;
-      }
-    });
+manageUserTypeSelection();
 });
 </script>
 
