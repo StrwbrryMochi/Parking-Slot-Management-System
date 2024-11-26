@@ -305,12 +305,15 @@
 
 
         const isNearBottom = (iconRect.bottom + 100) > window.innerHeight;
+        const deleteButton = document.getElementById("delete-User");
         optionContainer.style.left = `${iconRect.right + offsetX + 10}px`;
 
         if (accountType === 2 && !isNearBottom) {
             optionContainer.style.top = `${iconRect.top + offsetY - 65}px`;
+            deleteButton.style.display = "flex";
         } else if (accountType === 1 && !isNearBottom) {
-            optionContainer.style.top = `${iconRect.top + offsetY - 65}px`;
+            optionContainer.style.top = `${iconRect.top + offsetY - 18}px`;
+            deleteButton.style.display = "none";
         } else {
             optionContainer.style.top = `${iconRect.top + offsetY + (isNearBottom ? -65 : -18)}px`;
         }

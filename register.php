@@ -393,7 +393,7 @@ document.querySelectorAll('.next-button').forEach(button => {
             // Second Page 
             if (currentContainer.dataset.step === '2') {
                 if (firstnameInput.value.trim() === '') {
-                    displayFirstNameFormatError('Please enter your first name before Ppoceeding!');
+                    displayFirstNameFormatError('Please enter your first name before proceeding!');
                     return;
                 }
 
