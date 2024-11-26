@@ -644,7 +644,7 @@ section.visible {
   height: 100%;
   border: 1px #a5a5a5 solid;
   border-radius: 10px;
-  overflow: hidden;
+  overflow: auto;
   animation: scaleContainer 0.5s ease var(--delay);
 }
 

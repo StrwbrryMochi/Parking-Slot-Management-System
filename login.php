@@ -1,6 +1,8 @@
 <?php 
 session_start();
 $Email = $passwordPost = "";
+$max_attempts = 5;
+$lockout_duration = 15 * 60;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate Email
@@ -24,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         include("php/connections.php");
 
         // Prepare the SQL statement to prevent SQL injection
-        $stmt = $connections->prepare("SELECT Password, Account_type FROM usertbl WHERE Email = ?");
+        $stmt = $connections->prepare("SELECT Password, Account_type, attempts, blocked_until FROM usertbl WHERE Email = ?");
         $stmt->bind_param("s", $Email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -32,10 +34,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $db_password = $row["Password"];
-            $db_account_type = $row["Account_type"]; 
+            $db_account_type = $row["Account_type"];
+            $attempts = $row["attempts"];
+            $blocked_until = $row["blocked_until"];
+
+            // Check if the account is blocked
+            if ($blocked_until && strtotime($blocked_until) > time()) {
+                echo "<script>window.location.href='login.php?account_blocked=true';</script>";
+                exit;
+            }
 
             // Verify the password using password_verify
             if (password_verify($passwordPost, $db_password)) {
+                $stmt = $connections->prepare("UPDATE usertbl SET attempts = 0, blocked_until = NULL WHERE Email = ?");
+                $stmt->bind_param("s", $Email);
+                $stmt->execute();
+
                 // Password is correct, start the session based on account type
                 $_SESSION['Email'] = $Email;
                 if ($db_account_type == "1") {
@@ -46,8 +60,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     echo "<script>window.location.href='staffPage/StaffDashboard.php?welcome_user=true';</script>";
                 }
             } else {
-                // Password incorrect
-                echo "<script>window.location.href='login.php?password_error=true';</script>";
+                $attempts++;
+                $blocked_until = ($attempts >= $max_attempts) ? date("Y-m-d H:i:s", time() + $lockout_duration) : null;
+
+                // Update the attempts and block time in the database
+                $stmt = $connections->prepare("UPDATE usertbl SET attempts = ?, blocked_until = ? WHERE Email = ?");
+                $stmt->bind_param("iss", $attempts, $blocked_until, $Email);
+                $stmt->execute();
+
+                $remaining_attempts = max(0, $max_attempts - $attempts);
+                echo "<script>window.location.href='login.php?password_error=true&attempts_left=" . $remaining_attempts . "';</script>";
             }
         } else {
             // Email is not registered
