@@ -487,7 +487,7 @@ function searchSlot($search = '', $selectedFloors = [], $selectedZones = [], $se
 
     $filterSql = "SELECT * FROM parking_tbl
               WHERE (status = 'Occupied' OR status = 'Reserved') 
-              AND plate_number LIKE '%$search%'";
+              AND (plate_number LIKE '%$search%' OR status LIKE '%$search%')";
 
     if (!empty($selectedFloors)) {
         $floors = implode(",", array_map('intval', $selectedFloors)); 

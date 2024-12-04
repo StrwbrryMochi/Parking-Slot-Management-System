@@ -49,12 +49,24 @@ if (isset($_GET['email_error']) && $_GET['email_error'] == 'true') {
 }
 
 if (isset($_GET['password_error']) && $_GET['password_error'] == 'true') {
+    $attemptsLeft = isset($_GET['attempts_left']) ? intval($_GET['attempts_left']) : 0;
+
     echo "<script>
         Swal.fire({
             icon: 'error',
             title: 'Error!',
-            text: 'Password Incorrect!',
+            text: 'Password Incorrect! You have " . $attemptsLeft . " attempts remaining.',
             timer: 2000
+        });
+    </script>";
+} elseif (isset($_GET['account_blocked']) && $_GET['account_blocked'] == 'true') {
+    $lockoutDuration = isset($_GET['lockout_duration']) ? intval($_GET['lockout_duration']) / 60 : 15;
+
+    echo "<script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Account Blocked!',
+            text: 'You have exceeded the maximum number of login attempts. Your account is temporarily locked. Try again in " . $lockoutDuration . " minutes.'
         });
     </script>";
 }

@@ -12,9 +12,6 @@
             <div class="modal-body edit">
                 <form action="../php/Admin/parkingExecute.php" method="POST">
                 <div class="lists-wrapper">
-                    <div class="edit-background">
-                        <img src="../img/Parking.svg" alt="">
-                    </div>
 
                         <div class="edit-slot-container">
 

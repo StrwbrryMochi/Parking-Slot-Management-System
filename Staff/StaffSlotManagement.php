@@ -455,6 +455,77 @@ $current_page = 'StaffSlotManagement';
         });
     </script>
 
+<script>
+        document.querySelector('.list-group').addEventListener('click', function (event) {
+
+            if (event.target.closest('.view-list')) {
+                const button = event.target.closest('.view-list'); 
+                const selectedZone = button.getAttribute('data-zone');
+                const selectedSlot = button.getAttribute('data-slot-number');
+                const selectedFloor = button.getAttribute('data-floor');
+                const plateNumber = button.getAttribute('data-plate-number');
+                const userType = button.getAttribute('data-user-type');
+                const vehicleType = button.getAttribute('data-vehicle-type');
+                const status = button.getAttribute('data-status');
+                const timeIn = button.getAttribute('data-time-in');
+
+                document.getElementById('modal-floor').textContent = selectedFloor;
+                document.getElementById('modal-zone').textContent = selectedZone;
+                document.getElementById('modal-slot').textContent = selectedSlot;
+                document.getElementById('modal-license-plate').textContent = plateNumber;
+                document.getElementById('modal-user-type').textContent = userType;
+                document.getElementById('modal-vehicle-type').textContent = vehicleType;
+                document.getElementById('modal-status').textContent = status;
+
+                document.getElementById('hidden-time-in').value = timeIn;
+
+                // Handle time_in: if it's 'null', empty, or invalid, hide the field
+                const modalTimeIn = document.getElementById('modal-time-in');
+                const modalTimeInField = document.getElementById('modal-time-in-field');
+
+                if (timeIn && timeIn !== 'null' && timeIn.trim() !== '') {
+                    const date = new Date(timeIn);
+                    const formattedDate = date.toLocaleString('en-US', { 
+                        year: 'numeric', 
+                        month: '2-digit', 
+                        day: '2-digit', 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        hour12: true 
+                    });
+                    modalTimeIn.textContent = formattedDate;
+                    modalTimeInField.style.display = 'block'; 
+                } else {
+                    modalTimeInField.style.display = 'none'; 
+                }
+
+                // Display vehicle type Image
+                const vehicleImageContainer = document.querySelector('.view-vehicle-type');
+                vehicleImageContainer.innerHTML = ''; 
+
+                let imgSrc = '';
+
+                // Match vehicle type and set corresponding image
+                if (vehicleType === 'Car') {
+                    imgSrc = '../img/Cars.svg';
+                } else if (vehicleType === 'Motorcycle') {
+                    imgSrc = '../img/Moto.svg';
+                } else if (vehicleType === 'Bicycle') {
+                    imgSrc = '../img/Bikes.svg';
+                } else {
+                    imgSrc = '../img/Parking.svg'; 
+                }
+
+                const vehicleImg = document.createElement('img');
+                vehicleImg.src = imgSrc;
+                vehicleImg.alt = vehicleType;
+                vehicleImageContainer.appendChild(vehicleImg);
+
+                $('#slotModal').modal('show');
+            }
+        });
+    </script>
+
     <script>
     $('#search, input[name="floors[]"], input[name="zones[]"], input[name="vehicle_types[]"]').on('input change', function() {
         var searchQuery = $('#search').val();

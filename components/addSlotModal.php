@@ -94,14 +94,6 @@
                                         <input type="radio" class="radio-input" name="zone" value="D" required>
                                         <span class="radio-tile">D</span>
                                     </label>
-                                    <label>
-                                        <input type="radio" class="radio-input" name="zone" value="E" required>
-                                        <span class="radio-tile">E</span>
-                                    </label>
-                                    <label>
-                                        <input type="radio" class="radio-input" name="zone" value="F" required>
-                                        <span class="radio-tile">F</span>
-                                    </label>
                                 </div>
                         </div>
                         <div class="slot-number-container">

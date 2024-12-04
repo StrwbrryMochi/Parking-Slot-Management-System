@@ -247,28 +247,21 @@ section.visible {
   margin-top: 12px;
 }
 
-.list-group a {
+.list-group button {
+  all: unset;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 10px;
+  padding: 10px 0 10px 0;
   text-decoration: none;
   color: #000;
   border-bottom: 1px #a5a5a5 solid;
   transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
-.list-group span {
-  margin-left: 20px;
-}
-
-.list-group svg {
-  width: 30px;
-  height: 30px;
-}
-
-.list-group a:hover {
+.list-group button:hover {
   transform: translateX(5px);
 }
 
