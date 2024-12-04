@@ -69,7 +69,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->execute();
 
                 $remaining_attempts = max(0, $max_attempts - $attempts);
-                echo "<script>window.location.href='login.php?password_error=true&attempts_left=" . $remaining_attempts . "';</script>";
+                if ($remaining_attempts === 0) {
+                    echo "<script>window.location.href='login.php?account_blocked=true&lockout_duration=';</script>";
+                } else {
+                    echo "<script>window.location.href='login.php?password_error=true&attempts_left=" . $remaining_attempts . "';</script>";
+                }
             }
         } else {
             // Email is not registered
